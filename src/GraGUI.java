@@ -14,9 +14,14 @@ public class GraGUI {
     private JPanel chatPokaz;
     private JPanel oknoGry;
 
+    private Gra gra;
+
     public GraGUI(){
         oknoGry.setPreferredSize(new Dimension(400, 600));
 
         oknoGry.setVisible(true);
     }
+
+
+    public Gra getGra(){return gra;}
 }
