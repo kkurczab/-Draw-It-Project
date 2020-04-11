@@ -3,7 +3,7 @@ public class Gra extends Thread{
     private int numerTury;
     private int maksymalnaLiczbaTur;
     private int liczbaGraczy;
-    private int[] wygrywaGracz;
+    public int wygrywaGracz;
 
 
     private Gracz[] gracze;
@@ -24,7 +24,7 @@ public class Gra extends Thread{
         liczbaP++;
     }
 
-    public int getNrGracza(){return numerTury%liczbaGraczy};
+    public int getNrGracza(){return numerTury%liczbaGraczy;}
 
     public Gracz[] getGracze() {
         return gracze;

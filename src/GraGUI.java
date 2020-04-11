@@ -11,8 +11,17 @@ public class GraGUI {
     private JPanel górnaTablica;
     private JPanel chat;
     private JFormattedTextField chatWpisz;
-    private JPanel chatPokaz;
+    private JPanel lewaStrona;
     private JPanel oknoGry;
+    private JPanel ranking;
+    private JPanel oknoChatu;
+    private JFormattedTextField formattedTextField1;
+    private JFormattedTextField formattedTextField2;
+    private JFormattedTextField formattedTextField3;
+    private JFormattedTextField formattedTextField4;
+    private JFormattedTextField formattedTextField5;
+
+    public boolean czyKoniecGry; //0-nie, 1-tak
 
     private Gra gra;
 
@@ -24,4 +33,5 @@ public class GraGUI {
 
 
     public Gra getGra(){return gra;}
+    public boolean getCzyKoniecGry(){ return czyKoniecGry;}
 }
