@@ -37,8 +37,9 @@ public class GraGUI {
     private int currentX, currentY, oldX, oldY;
     private BufferedImage canvas;
     private boolean clicked;
-    private int value =15;
-    //double value = 5;
+    private double value;//grubosc pedzla do zmiany, tak do 50 grubosc, jakis slider bylby spoko, zmiana value zmiana geubosci1do1
+    private int color;//kazdy przycik to cyferka - patrz getColor()//mozna mniej kolorow jak cos, przycisk gumki zmiana koloru na bialo XD
+
 
     private Gra gra;
 
@@ -46,9 +47,19 @@ public class GraGUI {
         gra = new Gra(5);
         oknoGry.setPreferredSize(new Dimension(400, 600));
 
-        oknoGry.setVisible(true);
-        canvas = new BufferedImage(400,600,BufferedImage.TYPE_INT_RGB);
 
+        color = 1;
+        value = 15;
+        gra = new Gra(5);
+        //oknoGry.setPreferredSize(new Dimension(400, 600));
+
+        oknoGry.setVisible(true);
+        canvas = new BufferedImage(1920,1080,BufferedImage.TYPE_INT_RGB);
+        //mozna uladnic potencjalnie to ale sa wazniejsze rzeczy
+        int tmpCol = color;
+        color = 3;//bialy
+        colorScreen();
+        color = tmpCol;
         planszaRysunku.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
@@ -112,13 +123,14 @@ public class GraGUI {
 
     }
 
+
+
     public Gra getGra(){return gra;}
     public boolean getCzyKoniecGry(){ return czyKoniecGry;}
 
     private void createUIComponents() {
 
             planszaRysunku = new JPanel(){
-
                 protected void paintComponent(Graphics g) {
                     super.paintComponent(g);
                     Graphics2D g2 = (Graphics2D) g;
@@ -129,11 +141,9 @@ public class GraGUI {
     }
     public void updateCanvas() {
         Graphics2D g2d = canvas.createGraphics();
-        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
+       g2d.setPaint(getColor());
 
-        g2d.setPaint(Color.red);
-
-        if (clicked==true)
+        if (clicked)
             g2d.fillOval(oldX - ((int) value / 2), oldY - ((int) value / 2), (int) value, (int) value);
         else {
             g2d.setStroke(new BasicStroke((float) value, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
@@ -142,7 +152,44 @@ public class GraGUI {
         }
         planszaRysunku.repaint();
     }
+    private Color getColor() {
+        Color c = null;
+        switch (color) {
+            case 1:
+                c = Color.black;
+                break;
+            case 2:
+                c = Color.gray;
+                break;
+            case 3:
+                c = Color.white;
+                break;
+            case 4:
+                c = Color.red;
+                break;
+            case 5:
+                c = Color.green;
+                break;
+            case 6:
+                c = Color.blue;
+                break;
+        }
+        return c;
+    }
+    private void colorScreen() {//przycisk kolorujacy caly ekran(potencajlna funcja), ustawaijac bialy kolor sluzy do czyszczenia
+        Graphics g = canvas.getGraphics();
+        g.setColor( getColor());
+        g.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
+        planszaRysunku.repaint();
+    }
 
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("GraGUI");
+        frame.setContentPane(new GraGUI().oknoGry);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
 
 
 /////
