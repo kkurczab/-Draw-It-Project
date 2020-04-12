@@ -34,6 +34,7 @@ public class GraGUI {
     private JFormattedTextField punkty4;
     private JFormattedTextField punkty5;
     private JFormattedTextField formattedTextField1;
+    private JComboBox wybórKoloru;
 
     public boolean czyKoniecGry; //0-nie, 1-tak
 
@@ -57,6 +58,20 @@ public class GraGUI {
         menuGUI.setVisible(true);
     }
 
+    public void removeElement(Gracz[] tab, int removeIndex){ //usuwa element z wybranego indeksu tablicy
+        System.arraycopy(tab, removeIndex + 1, tab, removeIndex, tab.length - 1 - removeIndex);
+    }
+
+    public static int getMinValue(Integer[] numbers){
+        int minValue = numbers[0];
+        for(int i=1;i<numbers.length;i++){
+            if(numbers[i] < minValue){
+                minValue = numbers[i];
+            }
+        }
+        return minValue;
+    }
+
     public void refresh() {//metoda oswiezajaca GUI
         //ustawienie rankingu graczy
         Integer[] ranking = new Integer[5];
@@ -69,20 +84,34 @@ public class GraGUI {
         punkty3.setValue(ranking[2]);
         punkty4.setValue(ranking[3]);
         punkty5.setValue(ranking[4]);
+
+        int k = 1;
         Gracz[] listaGraczy = gra.getGracze();
+        Integer[] x = ranking; //zmienne pomocnicze
+
         for(int i = 0; i < 5; i++){
-            Integer[] x = ranking; //zmienne pomocnicze
-            for(int j = 0; j < 5; j++){
-                if(ranking[ranking.length - 1 - i] == gra.getGracze()[j].getLiczbaPunktow());
-                    imie5.setText(gra.getGracze()[j].getNazwaGracza());
-                    Arrays.copyOf(x, x.length-1); //usuwa ostatni element z "x"
+             if(getMinValue(ranking) == listaGraczy[i].getLiczbaPunktow()){
+                 if(k==5){
+                     imie1.setText(listaGraczy[i].getNazwaGracza());
+                     k++;
+                 }if(k==4){
+                     imie2.setText(listaGraczy[i].getNazwaGracza());
+                     k++;
+                 }if(k==3){
+                     imie3.setText(listaGraczy[i].getNazwaGracza());
+                     k++;
+                 }if(k==2){
+                     imie4.setText(listaGraczy[i].getNazwaGracza());
+                     k++;
+                 }if(k==1){
+                     imie5.setText(listaGraczy[i].getNazwaGracza());
+                     k++;
+                 }
+
+                x = Arrays.copyOf(x, x.length - 1); //usuwa ostatni element z "x"
+                removeElement(listaGraczy, i);
             }
         }
-
-        //imie1.setText(gra.getGracze()[gra.getNrGracza()].getNazwaGracza());
-
-
-
 
     }
 
