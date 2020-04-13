@@ -22,7 +22,6 @@ public class NowaTura extends JDialog {
         okButton.setPreferredSize(new Dimension(300,20));
         IDGracza.setText(graGUI.getGra().getGracze()[graGUI.getGra().getNrGracza()].getNazwaGracza());
 
-
         okButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {

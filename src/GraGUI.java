@@ -89,7 +89,7 @@ public class GraGUI {
         Gracz[] listaGraczy = gra.getGracze();
         Integer[] x = ranking; //zmienne pomocnicze
 
-        for(int i = 0; i < 5; i++){
+        for(int i = 0; i < 5; i++){ //RANKING
              if(getMinValue(ranking) == listaGraczy[i].getLiczbaPunktow()){
                  if(k==5){
                      imie1.setText(listaGraczy[i].getNazwaGracza());

@@ -5,6 +5,7 @@ public class MenuGUI extends JDialog{
     private JButton STARTTHEGAMEButton;
     private JPanel menuGry;
     private JFormattedTextField imie1;
+    private JButton JOINButton;
     private JFormattedTextField imie2;
     private JFormattedTextField imie3;
     private JFormattedTextField imie4;
@@ -47,11 +48,7 @@ public class MenuGUI extends JDialog{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try{
-                    graGUI.getGra().getGracze()[0].setNazwaGracza(imie5.getText());
-                    graGUI.getGra().getGracze()[1].setNazwaGracza(imie5.getText());
-                    graGUI.getGra().getGracze()[2].setNazwaGracza(imie5.getText());
-                    graGUI.getGra().getGracze()[3].setNazwaGracza(imie5.getText());
-                    graGUI.getGra().getGracze()[4].setNazwaGracza(imie5.getText());
+                    graGUI.getGra().getGracze()[0].setNazwaGracza(imie1.getText());
                     dispose();
                     if(graGUI.czyKoniecGry != false){
                         KoniecGry koniecGry = new KoniecGry(graGUI);
@@ -62,7 +59,7 @@ public class MenuGUI extends JDialog{
                         nowaTura.setVisible(true);
                     }
                 }catch (IllegalArgumentException ee){
-                    JOptionPane.showMessageDialog(null, "Podaj imiona wszystkich 4 graczy!");
+                    JOptionPane.showMessageDialog(null, "Podaj imię!");
                 }
             }
         });
@@ -70,6 +67,21 @@ public class MenuGUI extends JDialog{
         setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowAdapter e){System.exit(0);}
+        });
+
+        JOINButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                try{
+                    graGUI.getGra().getGracze()[0].setNazwaGracza(imie1.getText());
+                    dispose();
+
+                    OknoHasła oknoHasła = new OknoHasła(graGUI);
+                    oknoHasła.setVisible(true);
+                }catch (IllegalArgumentException ee){
+                    JOptionPane.showMessageDialog(null, "Podaj imię!");
+                }
+            }
         });
     }
 }
