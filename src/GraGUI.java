@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 
-public class GraGUI extends Thread{
+public class GraGUI{
 
     private int weight;
     private int height;
@@ -42,19 +42,19 @@ public class GraGUI extends Thread{
     private boolean clicked;
     private int value;//grubosc pedzla do zmiany, tak do 50 grubosc, jakis slider bylby spoko, zmiana value zmiana geubosci1do1
     private int color;//kazdy przycik to cyferka - patrz getColor()//mozna mniej kolorow jak cos, przycisk gumki zmiana koloru na bialo XD
-    private boolean kuleczkaWladzy =true;
-    private int liczbGraczy = 5;
+    private boolean kuleczkaWladzy = true;
+    private int liczbGraczy = 2;
     private Gra gra;
     private Player klient;
     private Server serwer;
 
     public GraGUI() {
 
-        //dolaczDoGry();
-        this.start();
+        dolaczDoGry();
+
         gra = new Gra(liczbGraczy);
 
-
+        timer.start();
         //oknoGry.setPreferredSize(new Dimension(400, 600));
        // kuleczkaWladzy = getGra().getGracze()[klient.getPlayerID()].isCzyMojaTura();
         color = 1;
@@ -100,7 +100,7 @@ public class GraGUI extends Thread{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                // System.exit(0);
-                color = 7;
+                color = 5;
             }
         });
         //okno startowe
@@ -229,13 +229,13 @@ public class GraGUI extends Thread{
         planszaRysunku.repaint();
     }
 
-    public void startGUI() {
+    /*public void startGUI(GraGUI graGUI) {
         JFrame frame = new JFrame("GraGUI");
-        frame.setContentPane(new GraGUI().oknoGry);
+        frame.setContentPane(this.gra.oknoGry);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
-    }
+    }*/
     public void stworzGre(){
         serwer = new Server();
         serwer.przyjeciePolaczenia();
@@ -248,21 +248,21 @@ public class GraGUI extends Thread{
 
 
     public static void main(String[] args) {
-        GraGUI graGUI = new GraGUI();
-        graGUI.startGUI();
+        JFrame frame = new JFrame("GraGUI");
+        frame.setContentPane(new GraGUI().oknoGry);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
 
     }
 
-    Timer timer = new Timer(1, new ActionListener() {
+    Timer timer = new Timer(10, new ActionListener() {
         @Override
         public void actionPerformed(ActionEvent e) {
             synchronizeValues();
         }});
 /////
-    public void run(){
-        dolaczDoGry();
-        timer.start();
-    }
+
 
         private void synchronizeValues(){//zagniezdzone while aby zmnijeszyc liczbe operacji spradzania zbednego
             if(klient.getNrGraczaUWladzy()==klient.getPlayerID()){
@@ -282,6 +282,9 @@ public class GraGUI extends Thread{
                 currentY = klient.getCurrentY();
                 oldX = klient.getOldX();
                 oldY = klient.getOldY();
+                updateCanvas();
+                //System.out.println(oldX);
+               // System.out.println(currentX);
             }
             //while(true){
 

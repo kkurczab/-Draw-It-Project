@@ -1,3 +1,6 @@
+import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.*;
 
@@ -34,8 +37,9 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
     }
     public void polaczZSerwerem(){
         polaczenieOdKlienta = new PolaczenieOdKlienta();
-        polaczenieOdKlienta.synchroDanych();
+
     }
+
     ///////////////////Klasy
     private class PolaczenieOdKlienta {
         private Socket socket;
@@ -43,19 +47,10 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
         private DataOutputStream daneOUT;
 
         public void synchroDanych(){
-            while(true) {
                 try {
                     nrGraczaUWladzy = daneIN.readInt();
-                    if (nrGraczaUWladzy == playerID) {
-                        daneOUT.writeInt(kolor);
-                        daneOUT.writeInt(value);
-                        daneOUT.writeInt(oldX);
-                        daneOUT.writeInt(oldY);
-                        daneOUT.writeInt(currentX);
-                        daneOUT.writeInt(currentY);
-                        daneOUT.flush();
-                    }
-                    else {
+                    if (nrGraczaUWladzy != playerID) {
+                        System.out.println("Przegryw");
                         kolor = daneIN.readInt();
                         value = daneIN.readInt();
                         oldX = daneIN.readInt();
@@ -64,7 +59,6 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
                         currentY = daneIN.readInt();
                     }
                 } catch (IOException e) { }
-            }
         }
 
         public PolaczenieOdKlienta(){
@@ -75,14 +69,20 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
                 daneIN = new DataInputStream(socket.getInputStream());
                 daneOUT = new DataOutputStream(socket.getOutputStream());
                 playerID = daneIN.readInt();
+                timer.start();
                 System.out.println("Moj numer gracza to: " + playerID);
-
             }catch (IOException e)
             {
                 System.out.println("Socket w kontruktorze pol klienta");
             }
         }
     }
+    Timer timer = new Timer(10, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+           polaczenieOdKlienta.synchroDanych();
+            System.out.println(value + "   " + kolor);
+        }});
 
     public int getNrGraczaUWladzy() {
         return nrGraczaUWladzy;

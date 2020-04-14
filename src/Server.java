@@ -8,7 +8,7 @@ public class Server {
     private PolaczenieDoKlienta[] gracze;
     private int maxLiczbaGraczy;
     private int nrGraczaUWladzy;
-    private int kolor;
+    private int kolor =3;
     private int value;
     private int oldX;
     private int oldY;
@@ -37,9 +37,9 @@ public class Server {
 
     ///////////////////Konstruktor
     public Server(){
-        this.maxLiczbaGraczy = 5;
+        this.maxLiczbaGraczy = 2;
         gra = new Gra(maxLiczbaGraczy);
-        nrGraczaUWladzy =gra.getNrGracza();//trzeba przeniesc do zmiany tury czy czeos
+        nrGraczaUWladzy =gra.losujNrGracza();//trzeba przeniesc do zmiany tury czy czeos
         gracze = new PolaczenieDoKlienta[maxLiczbaGraczy];
         System.out.print("Serwer ruszyl!!!");
         liczbaGraczy = 0;
@@ -102,6 +102,7 @@ public class Server {
             }
         }
     }
+
     /////////////////////////Main
     public static void main(String[] args) throws UnknownHostException {
         System.out.print(InetAddress.getLocalHost());
