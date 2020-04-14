@@ -49,7 +49,18 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
         public void synchroDanych(){
                 try {
                     nrGraczaUWladzy = daneIN.readInt();
-                    if (nrGraczaUWladzy != playerID) {
+
+                    if (nrGraczaUWladzy == playerID) {
+                        System.out.println("wladza hahahah");
+                        daneOUT.writeInt(kolor);
+                        daneOUT.writeInt(value);
+                        daneOUT.writeInt(oldX);
+                        daneOUT.writeInt(oldY);
+                        daneOUT.writeInt(currentX);
+                        daneOUT.writeInt(currentY);
+                        daneOUT.flush();
+                    }
+                    else {
                         System.out.println("Przegryw");
                         kolor = daneIN.readInt();
                         value = daneIN.readInt();
