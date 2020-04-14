@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 
-public class GraGUI {
+public class GraGUI extends Thread{
 
     private int weight;
     private int height;
@@ -38,21 +38,26 @@ public class GraGUI {
     private int currentX, currentY, oldX, oldY;
     private BufferedImage canvas;
     private boolean clicked;
-    private double value;//grubosc pedzla do zmiany, tak do 50 grubosc, jakis slider bylby spoko, zmiana value zmiana geubosci1do1
+    private int value;//grubosc pedzla do zmiany, tak do 50 grubosc, jakis slider bylby spoko, zmiana value zmiana geubosci1do1
     private int color;//kazdy przycik to cyferka - patrz getColor()//mozna mniej kolorow jak cos, przycisk gumki zmiana koloru na bialo XD
-
-
+    private boolean kuleczkaWladzy =true;
+    private int liczbGraczy = 5;
     private Gra gra;
+    private Player klient;
+    private Server serwer;
 
-    public GraGUI(){
-        gra = new Gra(5);
-        oknoGry.setPreferredSize(new Dimension(400, 600));
+    public GraGUI() {
+
+        //dolaczDoGry();
+        this.start();
+        gra = new Gra(liczbGraczy);
 
 
+        //oknoGry.setPreferredSize(new Dimension(400, 600));
+       // kuleczkaWladzy = getGra().getGracze()[klient.getPlayerID()].isCzyMojaTura();
         color = 1;
         value = 15;
-        gra = new Gra(5);
-        //oknoGry.setPreferredSize(new Dimension(400, 600));
+
 
         oknoGry.setVisible(true);
         canvas = new BufferedImage(1920,1080,BufferedImage.TYPE_INT_RGB);
@@ -64,12 +69,13 @@ public class GraGUI {
         planszaRysunku.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
             public void mouseDragged(MouseEvent e) {
-
-                currentX = e.getX();
-                currentY = e.getY();
-                updateCanvas();
-                oldX = currentX;
-                oldY = currentY;
+                if(kuleczkaWladzy) {
+                    currentX = e.getX();
+                    currentY = e.getY();
+                    updateCanvas();
+                    oldX = currentX;
+                    oldY = currentY;
+                }
             }
         });
 
@@ -77,12 +83,13 @@ public class GraGUI {
         planszaRysunku.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                clicked = true;
-                oldX = e.getX();
-                oldY  = e.getY();
-                updateCanvas();
-                clicked = false;
-
+                if(kuleczkaWladzy) {
+                    clicked = true;
+                    oldX = e.getX();
+                    oldY = e.getY();
+                    updateCanvas();
+                    clicked = false;
+                }
             }
         });
 
@@ -90,12 +97,13 @@ public class GraGUI {
         zakończGręButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                System.exit(0);
+               // System.exit(0);
+                color = 7;
             }
         });
         //okno startowe
-        MenuGUI menuGUI = new MenuGUI(GraGUI.this);
-        menuGUI.setVisible(true);
+        //MenuGUI menuGUI = new MenuGUI(GraGUI.this);
+        //menuGUI.setVisible(true);
     }
 
     public void removeElement(Gracz[] tab, int removeIndex){ //usuwa element z wybranego indeksu tablicy
@@ -213,15 +221,62 @@ public class GraGUI {
         planszaRysunku.repaint();
     }
 
-    public static void main(String[] args) {
+    public void startGUI() {
         JFrame frame = new JFrame("GraGUI");
         frame.setContentPane(new GraGUI().oknoGry);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
     }
+    public void stworzGre(){
+        serwer = new Server();
+        serwer.przyjeciePolaczenia();
+
+    }
+    public void dolaczDoGry(){
+        klient = new Player();
+        klient.polaczZSerwerem();
+    }
 
 
+    public static void main(String[] args) {
+        GraGUI graGUI = new GraGUI();
+        graGUI.startGUI();
+
+    }
+
+    Timer timer = new Timer(1, new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            synchronizeValues();
+        }});
 /////
+    public void run(){
+        dolaczDoGry();
+        timer.start();
+    }
+
+        private void synchronizeValues(){//zagniezdzone while aby zmnijeszyc liczbe operacji spradzania zbednego
+            if(klient.getNrGraczaUWladzy()==klient.getPlayerID()){
+                kuleczkaWladzy = true;
+                klient.setValue(value);
+                klient.setKolor(color);
+                klient.setCurrentX(currentX);
+                klient.setOldX(oldX);
+                klient.setCurrentY(currentY);
+                klient.setOldY(oldY);
+            }
+            else{
+                kuleczkaWladzy = false;
+                value = klient.getValue();
+                color = klient.getKolor();
+                currentX = klient.getCurrentX();
+                currentY = klient.getCurrentY();
+                oldX = klient.getOldX();
+                oldY = klient.getOldY();
+            }
+            //while(true){
+
+        }
 
 }
