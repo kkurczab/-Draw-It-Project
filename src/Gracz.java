@@ -4,6 +4,7 @@ public class Gracz {
     //private int pozycjaRanking; //ktore miejsce punktowo zajmuje wsrod graczy
     private int liczbaPunktow;
     private int numerGracza;
+    private int coRysuje; //wskazuje na indeks w tablicy HASEŁ hasła, które gracz rysujący wybrał
 
     private String nazwaGracza;
 
@@ -30,6 +31,9 @@ public class Gracz {
     public int getNumerGracza() { return numerGracza; }
 
     public String getNazwaGracza() { return nazwaGracza; }
+
+    public int getCoRysuje(){ return coRysuje;}
+
 
 
     public void setNazwaGracza(String nazwaGracza) {

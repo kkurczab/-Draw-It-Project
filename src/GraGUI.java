@@ -3,6 +3,8 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -105,6 +107,12 @@ public class GraGUI extends Thread{
         //MenuGUI menuGUI = new MenuGUI(GraGUI.this);
         //menuGUI.setVisible(true);
     }
+
+    String[] hasła = {"kot", "pies", "basen", "buty", "kwiatek"};
+    public void czyZgadles(int x, GraGUI graGUI){
+        //if(x == )
+    }
+
 
     public void removeElement(Gracz[] tab, int removeIndex){ //usuwa element z wybranego indeksu tablicy
         System.arraycopy(tab, removeIndex + 1, tab, removeIndex, tab.length - 1 - removeIndex);
