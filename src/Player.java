@@ -34,7 +34,7 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
                 System.out.println("Moj numer gracza to: " + playerID);
             }catch (IOException e)
             {
-                System.out.println("Skocket w kontruktorze pol klienta");
+                System.out.println("Socket w kontruktorze pol klienta");
             }
         }
     }

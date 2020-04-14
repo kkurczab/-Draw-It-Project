@@ -2,10 +2,11 @@ import javax.swing.*;
 import java.awt.event.*;
 
 public class MenuGUI extends JDialog{
-    private JButton STARTTHEGAMEButton;
+    private JButton HOSTGAMEButton;
     private JPanel menuGry;
     private JFormattedTextField imie1;
     private JButton JOINButton;
+    private JPanel P;
     private JFormattedTextField imie2;
     private JFormattedTextField imie3;
     private JFormattedTextField imie4;
@@ -15,10 +16,10 @@ public class MenuGUI extends JDialog{
         setTitle("MENU");
         setContentPane(menuGry);
         setModal(true);
-        getRootPane().setDefaultButton(STARTTHEGAMEButton);
+        getRootPane().setDefaultButton(HOSTGAMEButton);
         pack();
 
-        STARTTHEGAMEButton.addKeyListener(new KeyAdapter() {
+        HOSTGAMEButton.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 if(e.getKeyCode() == KeyEvent.VK_ENTER){
@@ -44,7 +45,7 @@ public class MenuGUI extends JDialog{
             }
         });
 
-        STARTTHEGAMEButton.addActionListener(new ActionListener() {
+        HOSTGAMEButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try{
@@ -55,8 +56,8 @@ public class MenuGUI extends JDialog{
                         koniecGry.setVisible(true);
                     }
                     else {
-                        NowaTura nowaTura = new NowaTura(graGUI);
-                        nowaTura.setVisible(true);
+                        WaitingGUI waitingGUI = new WaitingGUI(graGUI);
+                        waitingGUI.setVisible(true);
                     }
                 }catch (IllegalArgumentException ee){
                     JOptionPane.showMessageDialog(null, "Podaj imię!");

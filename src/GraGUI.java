@@ -27,7 +27,7 @@ public class GraGUI {
     private JFormattedTextField imie4;
     private JFormattedTextField imie5;
     private JButton zakończGręButton;
-    private JProgressBar progressBar1;
+    private JProgressBar progressBar;
     private JFormattedTextField punkty1;
     private JFormattedTextField punkty2;
     private JFormattedTextField punkty3;
@@ -36,6 +36,7 @@ public class GraGUI {
     private JFormattedTextField formattedTextField1;
     private JComboBox wybórKoloru;
 
+    public Timer timer;
     public boolean czyKoniecGry; //0-nie, 1-tak
     private int currentX, currentY, oldX, oldY;
     private BufferedImage canvas;
@@ -46,7 +47,7 @@ public class GraGUI {
 
     private Gra gra;
 
-    public GraGUI(){
+    public GraGUI() {
         gra = new Gra(5);
         oknoGry.setPreferredSize(new Dimension(400, 600));
 
@@ -57,7 +58,7 @@ public class GraGUI {
         //oknoGry.setPreferredSize(new Dimension(400, 600));
 
         oknoGry.setVisible(true);
-        canvas = new BufferedImage(1920,1080,BufferedImage.TYPE_INT_RGB);
+        canvas = new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_RGB);
         //mozna uladnic potencjalnie to ale sa wazniejsze rzeczy
         int tmpCol = color;
         color = 3;//bialy
@@ -81,7 +82,7 @@ public class GraGUI {
             public void mousePressed(MouseEvent e) {
                 clicked = true;
                 oldX = e.getX();
-                oldY  = e.getY();
+                oldY = e.getY();
                 updateCanvas();
                 clicked = false;
 
@@ -98,6 +99,26 @@ public class GraGUI {
         //okno startowe
         MenuGUI menuGUI = new MenuGUI(GraGUI.this);
         menuGUI.setVisible(true);
+
+        //Pasek czasu------------------------------------------------------------------------
+        progressBar = new JProgressBar(JProgressBar.VERTICAL, 0, 10);
+        progressBar.setValue(10);
+        ActionListener listener = new ActionListener() {
+            int counter = 10;
+
+            public void actionPerformed(ActionEvent ae) {
+                counter--;
+                progressBar.setValue(counter);
+                if (counter < 1) {
+                    JOptionPane.showMessageDialog(null, "Koniec czasu!");
+                    timer.stop();
+                }
+            }
+        };
+        timer = new Timer(1000, listener);
+        timer.start();
+        JOptionPane.showMessageDialog(null, progressBar);
+        //Pasek czasu------------------------------------------------------------------------
     }
 
     String[] hasła = {"kot", "pies", "basen", "buty", "kwiatek"};
