@@ -86,6 +86,11 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
         private DataOutputStream daneOUT;
 
         public void run(){
+            try {
+                nrGraczaUWladzy = daneIN.readInt();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             while (true){
                 synchroDanych();
             }
@@ -95,12 +100,12 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
                 try {
                     //flaga = daneIN.readInt();
                    // if(flaga == 0)
-                        nrGraczaUWladzy = daneIN.readInt();
+
                         //System.out.println("wladza hahahah");
                     if (nrGraczaUWladzy != playerID) {
                         System.out.println("Przegryw");
                         if(flaga == 1) {
-                            System.out.println("Przegryw");
+                            System.out.println("przed kolorem");
                             kolor = daneIN.readInt();
                             System.out.println("po kolorze" + kolor);
                         }
