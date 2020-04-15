@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.Collections;
 
 
-public class GraGUI{
+public class GraGUI extends Thread{
 
     private int weight;
     private int height;
@@ -42,19 +42,21 @@ public class GraGUI{
     private boolean clicked;
     private int value;//grubosc pedzla do zmiany, tak do 50 grubosc, jakis slider bylby spoko, zmiana value zmiana geubosci1do1
     private int color;//kazdy przycik to cyferka - patrz getColor()//mozna mniej kolorow jak cos, przycisk gumki zmiana koloru na bialo XD
-    private boolean kuleczkaWladzy = true;
+    private boolean kuleczkaWladzy;
     private int liczbGraczy = 2;
     private Gra gra;
     private Player klient;
     private Server serwer;
 
-    public GraGUI() {
+    public GraGUI(){
 
-        dolaczDoGry();
+
 
         gra = new Gra(liczbGraczy);
+        klient = new Player();
 
-        timer.start();
+
+
         //oknoGry.setPreferredSize(new Dimension(400, 600));
        // kuleczkaWladzy = getGra().getGracze()[klient.getPlayerID()].isCzyMojaTura();
         color = 1;
@@ -63,6 +65,7 @@ public class GraGUI{
 
         oknoGry.setVisible(true);
         canvas = new BufferedImage(1920,1080,BufferedImage.TYPE_INT_RGB);
+        this.start();
         //mozna uladnic potencjalnie to ale sa wazniejsze rzeczy
         int tmpCol = color;
         color = 3;//bialy
@@ -101,11 +104,13 @@ public class GraGUI{
             public void actionPerformed(ActionEvent actionEvent) {
                // System.exit(0);
                 color = 5;
+                klient.wyslijKolor();
             }
         });
         //okno startowe
         //MenuGUI menuGUI = new MenuGUI(GraGUI.this);
         //menuGUI.setVisible(true);
+
     }
 
     String[] hasła = {"kot", "pies", "basen", "buty", "kwiatek"};
@@ -242,7 +247,7 @@ public class GraGUI{
 
     }
     public void dolaczDoGry(){
-        klient = new Player();
+
         klient.polaczZSerwerem();
     }
 
@@ -254,20 +259,23 @@ public class GraGUI{
         frame.pack();
         frame.setVisible(true);
 
+
+    }
+    public void run(){
+        dolaczDoGry();
+        while (true){
+            synchronizeValues();
+        }
     }
 
-    Timer timer = new Timer(10, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            synchronizeValues();
-        }});
+
 /////
 
 
         private void synchronizeValues(){//zagniezdzone while aby zmnijeszyc liczbe operacji spradzania zbednego
             if(klient.getNrGraczaUWladzy()==klient.getPlayerID()){
                 kuleczkaWladzy = true;
-                klient.setValue(value);
+               // klient.setValue(value);
                 klient.setKolor(color);
                 klient.setCurrentX(currentX);
                 klient.setOldX(oldX);
@@ -276,13 +284,14 @@ public class GraGUI{
             }
             else{
                 kuleczkaWladzy = false;
-                value = klient.getValue();
+                //value = klient.getValue();
                 color = klient.getKolor();
                 currentX = klient.getCurrentX();
                 currentY = klient.getCurrentY();
+                updateCanvas();
                 oldX = klient.getOldX();
                 oldY = klient.getOldY();
-                updateCanvas();
+
                 //System.out.println(oldX);
                // System.out.println(currentX);
             }

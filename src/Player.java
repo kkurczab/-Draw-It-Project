@@ -11,11 +11,12 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
     private int[] pozostaliGracze;
     private int nrGraczaUWladzy;
     private int kolor;
-    private int value;
+    //private int value;
     private int oldX;
     private int oldY;
     private int currentX;
     private int currentY;
+    private int flaga;
 
     /////////////Metody
     public void setOktet4(int oktet4) {
@@ -27,7 +28,7 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
 
 
     //////////////Kontruktor
-    public Player()  {
+    public Player() {
         try {
             oktetyIP = InetAddress.getLocalHost().getAddress();
         }catch (UnknownHostException e){}
@@ -37,42 +38,86 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
     }
     public void polaczZSerwerem(){
         polaczenieOdKlienta = new PolaczenieOdKlienta();
-
     }
-
+    public void wyslijKolor() {
+        try {
+            flaga = 1;
+            polaczenieOdKlienta.daneOUT.writeInt(flaga);
+            polaczenieOdKlienta.daneOUT.writeInt(kolor);
+            polaczenieOdKlienta.daneOUT.flush();
+        }catch (IOException e){}
+    }
+    public void wyslijOldX() {
+        try{
+        flaga = 3;
+        polaczenieOdKlienta.daneOUT.writeInt(flaga);
+        polaczenieOdKlienta. daneOUT.writeInt(oldX);
+        polaczenieOdKlienta.daneOUT.flush();
+        }catch (IOException e){}
+    }
+    public void wyslijOldY() {
+        try{
+        flaga = 4;
+        polaczenieOdKlienta.daneOUT.writeInt(flaga);
+        polaczenieOdKlienta.daneOUT.writeInt(oldY);
+        polaczenieOdKlienta.daneOUT.flush();
+        }catch (IOException e){}
+    }
+    public void wyslijCurrentX() {
+        try{
+        flaga = 5;
+        polaczenieOdKlienta.daneOUT.writeInt(flaga);
+        polaczenieOdKlienta.daneOUT.writeInt(currentX);
+        polaczenieOdKlienta.daneOUT.flush();
+        }catch (IOException e){}
+    }
+    public void wyslijCurrentY() {
+        try{
+        flaga = 6;
+        polaczenieOdKlienta.daneOUT.writeInt(flaga);
+        polaczenieOdKlienta.daneOUT.writeInt(currentY);
+        polaczenieOdKlienta.daneOUT.flush();
+        }catch (IOException e){}
+    }
     ///////////////////Klasy
-    private class PolaczenieOdKlienta {
+    private class PolaczenieOdKlienta extends Thread{
         private Socket socket;
         private DataInputStream daneIN;
         private DataOutputStream daneOUT;
 
+        public void run(){
+            while (true){
+                synchroDanych();
+            }
+        }
+
         public void synchroDanych(){
                 try {
-                    nrGraczaUWladzy = daneIN.readInt();
-
-                    if (nrGraczaUWladzy == playerID) {
-                        System.out.println("wladza hahahah");
-                        daneOUT.writeInt(kolor);
-                        daneOUT.writeInt(value);
-                        daneOUT.writeInt(oldX);
-                        daneOUT.writeInt(oldY);
-                        daneOUT.writeInt(currentX);
-                        daneOUT.writeInt(currentY);
-                        daneOUT.flush();
-                    }
-                    else {
+                    //flaga = daneIN.readInt();
+                   // if(flaga == 0)
+                        nrGraczaUWladzy = daneIN.readInt();
+                        //System.out.println("wladza hahahah");
+                    if (nrGraczaUWladzy != playerID) {
                         System.out.println("Przegryw");
-                        kolor = daneIN.readInt();
-                        value = daneIN.readInt();
-                        oldX = daneIN.readInt();
-                        oldY = daneIN.readInt();
-                        currentX = daneIN.readInt();
-                        currentY = daneIN.readInt();
+                        if(flaga == 1) {
+                            System.out.println("Przegryw");
+                            kolor = daneIN.readInt();
+                            System.out.println("po kolorze" + kolor);
+                        }
+                       // value = daneIN.readInt();
+                        if(flaga == 3)
+                            oldX = daneIN.readInt();
+                        if(flaga == 4)
+                            oldY = daneIN.readInt();
+                        if(flaga == 5)
+                            currentX = daneIN.readInt();
+                        if(flaga == 6)
+                            currentY = daneIN.readInt();
                     }
                 } catch (IOException e) { }
         }
 
-        public PolaczenieOdKlienta(){
+        public PolaczenieOdKlienta() {
 
             System.out.println("Klient!!!!");
             try{
@@ -80,7 +125,7 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
                 daneIN = new DataInputStream(socket.getInputStream());
                 daneOUT = new DataOutputStream(socket.getOutputStream());
                 playerID = daneIN.readInt();
-                timer.start();
+                this.start();
                 System.out.println("Moj numer gracza to: " + playerID);
             }catch (IOException e)
             {
@@ -88,12 +133,7 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
             }
         }
     }
-    Timer timer = new Timer(10, new ActionListener() {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-           polaczenieOdKlienta.synchroDanych();
-            System.out.println(value + "   " + kolor);
-        }});
+
 
     public int getNrGraczaUWladzy() {
         return nrGraczaUWladzy;
@@ -106,7 +146,7 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
     public void setKolor(int kolor) {
         this.kolor = kolor;
     }
-
+/*
     public int getValue() {
         return value;
     }
@@ -114,7 +154,7 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
     public void setValue(int value) {
         this.value = value;
     }
-
+*/
     public int getOldX() {
         return oldX;
     }
@@ -150,9 +190,12 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
     public static void main(String[] args) {
         Player player = new Player();
         player.polaczZSerwerem();
+        player.polaczenieOdKlienta.synchroDanych();
+        System.out.println(player.kolor);
 
     }
     public int getPlayerID(){
         return playerID;
     }
+
 }

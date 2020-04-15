@@ -8,12 +8,19 @@ public class Server {
     private PolaczenieDoKlienta[] gracze;
     private int maxLiczbaGraczy;
     private int nrGraczaUWladzy;
-    private int kolor =3;
-    private int value;
+    private int kolor = 3;
+   // private int value;
     private int oldX;
     private int oldY;
     private int currentX;
     private int currentY;
+    int kolorBuff;
+    //int valueBuff;
+    int oldXBuff;
+    int oldYBuff;
+    int currentXBuff;
+    int currentYBuff;
+    int flaga;//1=kolor,2 = value, 3 = oldx, 4 = oldy, 5 = curx, 6 = cury
 
 
    ///////////////////Metody
@@ -72,28 +79,76 @@ public class Server {
             }
         }
         public void run(){
+
             try{
                 daneOUT.writeInt(playerID);
                 daneOUT.flush();
-                while(true){
+                if(flaga == 0) {
                     daneOUT.writeInt(nrGraczaUWladzy);
                     daneOUT.flush();
+                    flaga = 1;
+                }
+                while(true){
+
                     if(nrGraczaUWladzy == playerID){
-                        kolor = daneIN.readInt();
-                        value = daneIN.readInt();
-                        oldX = daneIN.readInt();
-                        oldY = daneIN.readInt();
-                        currentX = daneIN.readInt();
-                        currentY = daneIN.readInt();
+                        flaga = daneIN.readInt();
+                        if(flaga == 1)
+                            kolorBuff = daneIN.readInt();
+                        System.out.println(kolorBuff);
+                        //valueBuff = daneIN.readInt();
+                        if(flaga == 3)
+                            oldXBuff = daneIN.readInt();
+                        if(flaga == 4)
+                            oldYBuff = daneIN.readInt();
+                        if(flaga == 5)
+                            currentXBuff = daneIN.readInt();
+                        if(flaga == 6)
+                            currentYBuff = daneIN.readInt();
                     }
                     else{
-                        daneOUT.writeInt(kolor);
-                        daneOUT.writeInt(value);
-                        daneOUT.writeInt(oldX);
-                        daneOUT.writeInt(oldY);
-                        daneOUT.writeInt(currentX);
-                        daneOUT.writeInt(currentY);
-                        daneOUT.flush();
+                        if(kolor != kolorBuff) {
+                            kolor = kolorBuff;
+                            flaga = 1;
+                            daneOUT.writeInt(flaga);
+                            daneOUT.writeInt(kolor);
+                            daneOUT.flush();
+                        }/*
+                        if (value != valueBuff){
+                            value = valueBuff;
+                            flaga = 2;
+                            daneOUT.writeInt(flaga);
+                            daneOUT.writeInt(value);
+                            daneOUT.flush();
+                        }*/
+                        if(oldX != oldXBuff){
+                            oldX = oldXBuff;
+                            flaga = 3;
+                            daneOUT.writeInt(flaga);
+                            daneOUT.writeInt(oldX);
+                            daneOUT.flush();
+                        }
+                        if( oldY != oldYBuff) {
+                            oldY = oldYBuff;
+                            flaga = 4;
+                            daneOUT.writeInt(flaga);
+                            daneOUT.writeInt(oldY);
+                            daneOUT.flush();
+                        }
+                        if(currentX != currentXBuff) {
+                            currentX = currentXBuff;
+                            flaga = 5;
+                            daneOUT.writeInt(flaga);
+                            daneOUT.writeInt(currentX);
+                            daneOUT.flush();
+                        }
+                        if(currentY != currentYBuff) {
+                            currentY = currentYBuff;
+                            flaga = 6;
+                            daneOUT.writeInt(flaga);
+                            daneOUT.writeInt(currentY);
+                            daneOUT.flush();
+                        }
+
                     }
                 }
 
