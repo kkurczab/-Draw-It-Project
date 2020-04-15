@@ -43,6 +43,7 @@ public class GraGUI {
     private boolean clicked;
     private double value;//grubosc pedzla do zmiany, tak do 50 grubosc, jakis slider bylby spoko, zmiana value zmiana geubosci1do1
     private int color;//kazdy przycik to cyferka - patrz getColor()//mozna mniej kolorow jak cos, przycisk gumki zmiana koloru na bialo XD
+    private Gracz[] gracze;
 
 
     private Gra gra;
@@ -50,6 +51,7 @@ public class GraGUI {
     public GraGUI() {
         gra = new Gra(5);
         oknoGry.setPreferredSize(new Dimension(400, 600));
+
 
 
         color = 1;
