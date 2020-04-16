@@ -25,7 +25,7 @@ public class GraGUI extends Thread{
     private JFormattedTextField imie4;
     private JFormattedTextField imie5;
     private JButton czarnyButton;
-    private JProgressBar progressBar1;
+    private JProgressBar progressBar;
     private JFormattedTextField punkty1;
     private JFormattedTextField punkty2;
     private JFormattedTextField punkty3;
