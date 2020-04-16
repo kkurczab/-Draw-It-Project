@@ -4,14 +4,13 @@ import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.*;
 
-public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adresach w podsieci XD, bo serwerem bedzie host ktory pierwszy odpali gre
+public class Player {//haslo to ostatni oktet adresu ip
     private byte[] oktetyIP;
     private PolaczenieOdKlienta polaczenieOdKlienta;
     private int playerID;
     private int[] pozostaliGracze;
     private int nrGraczaUWladzy=-1;
-    private int kolor = 1;
-    //private int value;
+    private int kolor;
     private int oldX;
     private int oldY;
     private int currentX;
@@ -26,6 +25,51 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
             throw new IllegalArgumentException();
     }
 
+    public int getNrGraczaUWladzy() {
+        return nrGraczaUWladzy;
+    }
+
+    public int getKolor() {
+        return kolor;
+    }
+
+    public void setKolor(int kolor) {
+        this.kolor = kolor;
+    }
+
+    public int getOldX() {
+        return oldX;
+    }
+
+    public void setOldX(int oldX) {
+        this.oldX = oldX;
+    }
+
+    public int getOldY() {
+        return oldY;
+    }
+
+    public void setOldY(int oldY) {
+        this.oldY = oldY;
+    }
+
+    public int getCurrentX() {
+        return currentX;
+    }
+
+    public void setCurrentX(int currentX) {
+        this.currentX = currentX;
+    }
+
+    public int getCurrentY() {
+        return currentY;
+    }
+
+    public void setCurrentY(int currentY) {
+        this.currentY = currentY;
+    }
+
+
 
     //////////////Kontruktor
     public Player() {
@@ -33,7 +77,7 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
             oktetyIP = InetAddress.getLocalHost().getAddress();
         }catch (UnknownHostException e){}
 
-        playerID = -1;//serwer nei wstal
+        playerID = -1;//serwer nie wstal
 
     }
     public void polaczZSerwerem(){
@@ -45,7 +89,9 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
             polaczenieOdKlienta.daneOUT.writeInt(flaga);
             polaczenieOdKlienta.daneOUT.writeInt(kolor);
             polaczenieOdKlienta.daneOUT.flush();
-        }catch (IOException e){}
+        }catch (IOException e){
+            System.out.println("");
+        }
     }
     public void wyslijOldX() {
         try{
@@ -111,7 +157,6 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
                             kolor = daneIN.readInt();
                             System.out.println("po kolorze" + kolor);
                         }
-                       // value = daneIN.readInt();
                         if(flaga == 3)
                             oldX = daneIN.readInt();
                         if(flaga == 4)
@@ -142,58 +187,6 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
         }
     }
 
-
-    public int getNrGraczaUWladzy() {
-        return nrGraczaUWladzy;
-    }
-
-    public int getKolor() {
-        return kolor;
-    }
-
-    public void setKolor(int kolor) {
-        this.kolor = kolor;
-    }
-/*
-    public int getValue() {
-        return value;
-    }
-
-    public void setValue(int value) {
-        this.value = value;
-    }
-*/
-    public int getOldX() {
-        return oldX;
-    }
-
-    public void setOldX(int oldX) {
-        this.oldX = oldX;
-    }
-
-    public int getOldY() {
-        return oldY;
-    }
-
-    public void setOldY(int oldY) {
-        this.oldY = oldY;
-    }
-
-    public int getCurrentX() {
-        return currentX;
-    }
-
-    public void setCurrentX(int currentX) {
-        this.currentX = currentX;
-    }
-
-    public int getCurrentY() {
-        return currentY;
-    }
-
-    public void setCurrentY(int currentY) {
-        this.currentY = currentY;
-    }
 
     public static void main(String[] args) {
         Player player = new Player();

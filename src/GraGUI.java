@@ -3,8 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
-import java.io.FileReader;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -26,7 +24,7 @@ public class GraGUI extends Thread{
     private JFormattedTextField imie3;
     private JFormattedTextField imie4;
     private JFormattedTextField imie5;
-    private JButton zakończGręButton;
+    private JButton czarnyButton;
     private JProgressBar progressBar1;
     private JFormattedTextField punkty1;
     private JFormattedTextField punkty2;
@@ -35,6 +33,11 @@ public class GraGUI extends Thread{
     private JFormattedTextField punkty5;
     private JFormattedTextField formattedTextField1;
     private JComboBox wybórKoloru;
+    private JButton zielonyButton;
+    private JButton szaryButton;
+    private JButton czerwonyButton;
+    private JButton niebieskiButton;
+    private JButton wyczyscButton;
 
     public boolean czyKoniecGry; //0-nie, 1-tak
     private int currentX, currentY, oldX, oldY;
@@ -43,7 +46,7 @@ public class GraGUI extends Thread{
     private int value;//grubosc pedzla do zmiany, tak do 50 grubosc, jakis slider bylby spoko, zmiana value zmiana geubosci1do1
     private int color;//kazdy przycik to cyferka - patrz getColor()//mozna mniej kolorow jak cos, przycisk gumki zmiana koloru na bialo XD
     private boolean kuleczkaWladzy;
-    private int liczbGraczy = 2;
+    private int liczbGraczy = 3;
     private Gra gra;
     private Player klient;
     private Server serwer;
@@ -99,11 +102,51 @@ public class GraGUI extends Thread{
         });
 
 
-        zakończGręButton.addActionListener(new ActionListener() {
+        czarnyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                // System.exit(0);
+                color = 1;
+                klient.wyslijKolor();
+            }
+        });
+        szaryButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                // System.exit(0);
+                color = 2;
+                klient.wyslijKolor();
+            }
+        });
+        czerwonyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                // System.exit(0);
+                color = 4;
+                klient.wyslijKolor();
+            }
+        });
+        zielonyButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                // System.exit(0);
                 color = 5;
+                klient.wyslijKolor();
+            }
+        });
+        niebieskiButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                // System.exit(0);
+                color = 6;
+                klient.wyslijKolor();
+            }
+        });
+        wyczyscButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                // System.exit(0);
+                color = 3;
                 klient.wyslijKolor();
             }
         });
@@ -257,6 +300,7 @@ public class GraGUI extends Thread{
     }
     public void run(){
         dolaczDoGry();
+
         while (true){
             synchronizeValues();
         }
@@ -289,7 +333,7 @@ public class GraGUI extends Thread{
                 //System.out.println(oldX);
                // System.out.println(currentX);
             }
-            //while(true){
+
 
         }
 

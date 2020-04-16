@@ -8,14 +8,12 @@ public class Server {
     private PolaczenieDoKlienta[] gracze;
     private int maxLiczbaGraczy;
     private int nrGraczaUWladzy;
-    private int kolor =1;
-   // private int value;
+    private int kolor;
     private int oldX;
     private int oldY;
     private int currentX;
     private int currentY;
-    int kolorBuff = 1;
-    //int valueBuff;
+    int kolorBuff=1;
     int oldXBuff;
     int oldYBuff;
     int currentXBuff;
@@ -44,9 +42,9 @@ public class Server {
 
     ///////////////////Konstruktor
     public Server(){
-        this.maxLiczbaGraczy = 2;
+        this.maxLiczbaGraczy = 3;
         gra = new Gra(maxLiczbaGraczy);
-        nrGraczaUWladzy =gra.losujNrGracza();//trzeba przeniesc do zmiany tury czy czeos
+        nrGraczaUWladzy =gra.losujNrGracza();//trzeba przeniesc do zmiany tury czy czegos
         gracze = new PolaczenieDoKlienta[maxLiczbaGraczy];
         System.out.print("Serwer ruszyl!!!");
         liczbaGraczy = 0;
@@ -79,7 +77,6 @@ public class Server {
             }
         }
         public void run(){
-
             try{
                 daneOUT.writeInt(playerID);
                 flaga = 0;
@@ -87,14 +84,15 @@ public class Server {
                     daneOUT.writeInt(nrGraczaUWladzy);
                     daneOUT.flush();
                     flaga = -1;
+
                 while(true){
                     Thread.yield();
+
                     if(nrGraczaUWladzy == playerID){
                         flaga = daneIN.readInt();
                         if(flaga == 1)
                             kolorBuff = daneIN.readInt();
                         System.out.println(kolorBuff);
-                        //valueBuff = daneIN.readInt();
                         if(flaga == 3)
                             oldXBuff = daneIN.readInt();
                         if(flaga == 4)
@@ -141,7 +139,6 @@ public class Server {
                             daneOUT.writeInt(currentY);
                             daneOUT.flush();
                         }
-
                     }
                 }
 
