@@ -19,8 +19,6 @@ public class Gra extends Thread{
         for(int i = 0; i<liczbaGraczy;i++){
             gracze[i] = new Gracz(false);
         }
-
-
         this.start();
 
     }
