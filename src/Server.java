@@ -20,7 +20,7 @@ public class Server {
     int oldYBuff;
     int currentXBuff;
     int currentYBuff;
-    int flaga;//1=kolor,2 = value, 3 = oldx, 4 = oldy, 5 = curx, 6 = cury
+    int flaga;//1=kolor, 3 = oldx, 4 = oldy, 5 = curx, 6 = cury
 
 
    ///////////////////Metody

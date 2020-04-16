@@ -60,7 +60,7 @@ public class GraGUI extends Thread{
         //oknoGry.setPreferredSize(new Dimension(400, 600));
        // kuleczkaWladzy = getGra().getGracze()[klient.getPlayerID()].isCzyMojaTura();
         color = 1;
-        value = 15;
+        value = 7;
 
 
         oknoGry.setVisible(true);
@@ -183,7 +183,7 @@ public class GraGUI extends Thread{
 
             planszaRysunku = new JPanel(){
                 protected void paintComponent(Graphics g) {
-                    super.paintComponent(g);
+                    super.paintComponent(g);//??????
                     Graphics2D g2 = (Graphics2D) g;
                     g2.drawImage(canvas, 0, 0, null);
                 }
@@ -192,7 +192,7 @@ public class GraGUI extends Thread{
     }
     public void updateCanvas() {
         Graphics2D g2d = canvas.createGraphics();
-       g2d.setPaint(getColor());
+        g2d.setPaint(getColor());
 
         if (clicked)
             g2d.fillOval(oldX - ((int) value / 2), oldY - ((int) value / 2), (int) value, (int) value);
