@@ -33,8 +33,7 @@ public class GraGUI {
     private JFormattedTextField punkty3;
     private JFormattedTextField punkty4;
     private JFormattedTextField punkty5;
-    private JFormattedTextField formattedTextField1;
-    private JComboBox wybórKoloru;
+    private JFormattedTextField haslo;
 
     public Timer timer;
     public boolean czyKoniecGry; //0-nie, 1-tak
@@ -122,6 +121,7 @@ public class GraGUI {
     }
 
     String[] hasła = {"kot", "pies", "basen", "buty", "kwiatek"};
+
     public void czyZgadles(int x, GraGUI graGUI){
         //if(x == )
     }
