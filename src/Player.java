@@ -9,8 +9,8 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
     private PolaczenieOdKlienta polaczenieOdKlienta;
     private int playerID;
     private int[] pozostaliGracze;
-    private int nrGraczaUWladzy;
-    private int kolor;
+    private int nrGraczaUWladzy=-1;
+    private int kolor = 1;
     //private int value;
     private int oldX;
     private int oldY;
@@ -86,11 +86,10 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
         private DataOutputStream daneOUT;
 
         public void run(){
-            try {
-                nrGraczaUWladzy = daneIN.readInt();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+
+
+                System.out.println(nrGraczaUWladzy + "wladza");
+
             while (true){
                 synchroDanych();
             }
@@ -98,14 +97,17 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
 
         public void synchroDanych(){
                 try {
-                    //flaga = daneIN.readInt();
-                   // if(flaga == 0)
 
-                        //System.out.println("wladza hahahah");
+                    flaga = daneIN.readInt();
+                    if(flaga == 0) {
+                        nrGraczaUWladzy = daneIN.readInt();
+
+                        System.out.println("wladza ha" + nrGraczaUWladzy);
+                    }
                     if (nrGraczaUWladzy != playerID) {
-                        System.out.println("Przegryw");
+                        System.out.println("Przegryw" + playerID);
                         if(flaga == 1) {
-                            System.out.println("przed kolorem");
+                            System.out.println("przed kolorem" + kolor);
                             kolor = daneIN.readInt();
                             System.out.println("po kolorze" + kolor);
                         }
@@ -130,8 +132,9 @@ public class Player {//szukanie adresu ip to bedzie iteracja po wszystkich adres
                 daneIN = new DataInputStream(socket.getInputStream());
                 daneOUT = new DataOutputStream(socket.getOutputStream());
                 playerID = daneIN.readInt();
-                this.start();
                 System.out.println("Moj numer gracza to: " + playerID);
+                this.start();
+
             }catch (IOException e)
             {
                 System.out.println("Socket w kontruktorze pol klienta");

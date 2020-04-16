@@ -234,13 +234,7 @@ public class GraGUI extends Thread{
         planszaRysunku.repaint();
     }
 
-    /*public void startGUI(GraGUI graGUI) {
-        JFrame frame = new JFrame("GraGUI");
-        frame.setContentPane(this.gra.oknoGry);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-    }*/
+
     public void stworzGre(){
         serwer = new Server();
         serwer.przyjeciePolaczenia();
@@ -272,10 +266,10 @@ public class GraGUI extends Thread{
 /////
 
 
-        private void synchronizeValues(){//zagniezdzone while aby zmnijeszyc liczbe operacji spradzania zbednego
+        private void synchronizeValues(){
             if(klient.getNrGraczaUWladzy()==klient.getPlayerID()){
                 kuleczkaWladzy = true;
-               // klient.setValue(value);
+
                 klient.setKolor(color);
                 klient.setCurrentX(currentX);
                 klient.setOldX(oldX);
@@ -284,7 +278,7 @@ public class GraGUI extends Thread{
             }
             else{
                 kuleczkaWladzy = false;
-                //value = klient.getValue();
+
                 color = klient.getKolor();
                 currentX = klient.getCurrentX();
                 currentY = klient.getCurrentY();

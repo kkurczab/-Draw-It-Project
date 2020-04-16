@@ -8,13 +8,13 @@ public class Server {
     private PolaczenieDoKlienta[] gracze;
     private int maxLiczbaGraczy;
     private int nrGraczaUWladzy;
-    private int kolor = 3;
+    private int kolor =1;
    // private int value;
     private int oldX;
     private int oldY;
     private int currentX;
     private int currentY;
-    int kolorBuff;
+    int kolorBuff = 1;
     //int valueBuff;
     int oldXBuff;
     int oldYBuff;
@@ -82,14 +82,13 @@ public class Server {
 
             try{
                 daneOUT.writeInt(playerID);
-                daneOUT.flush();
-                if(flaga == 0) {
+                flaga = 0;
+                    daneOUT.writeInt(flaga);
                     daneOUT.writeInt(nrGraczaUWladzy);
                     daneOUT.flush();
-                    flaga = 1;
-                }
+                    flaga = -1;
                 while(true){
-
+                    Thread.yield();
                     if(nrGraczaUWladzy == playerID){
                         flaga = daneIN.readInt();
                         if(flaga == 1)
@@ -107,19 +106,13 @@ public class Server {
                     }
                     else{
                         if(kolor != kolorBuff) {
+                            System.out.println("wysylam kolor teraz");
                             kolor = kolorBuff;
                             flaga = 1;
                             daneOUT.writeInt(flaga);
                             daneOUT.writeInt(kolor);
                             daneOUT.flush();
-                        }/*
-                        if (value != valueBuff){
-                            value = valueBuff;
-                            flaga = 2;
-                            daneOUT.writeInt(flaga);
-                            daneOUT.writeInt(value);
-                            daneOUT.flush();
-                        }*/
+                        }
                         if(oldX != oldXBuff){
                             oldX = oldXBuff;
                             flaga = 3;
