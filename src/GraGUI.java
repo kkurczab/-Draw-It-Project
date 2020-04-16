@@ -31,13 +31,13 @@ public class GraGUI extends Thread{
     private JFormattedTextField punkty3;
     private JFormattedTextField punkty4;
     private JFormattedTextField punkty5;
-    private JFormattedTextField formattedTextField1;
     private JComboBox wybórKoloru;
     private JButton zielonyButton;
     private JButton szaryButton;
     private JButton czerwonyButton;
     private JButton niebieskiButton;
     private JButton wyczyscButton;
+    private JFormattedTextField haslo;
 
     public Timer timer;
     public boolean czyKoniecGry; //0-nie, 1-tak
@@ -172,6 +172,7 @@ public class GraGUI extends Thread{
     }
 
     String[] hasła = {"kot", "pies", "basen", "buty", "kwiatek"};
+
     public void czyZgadles(int x, GraGUI graGUI){
         //if(x == )
     }
