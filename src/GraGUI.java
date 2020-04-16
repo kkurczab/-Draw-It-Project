@@ -39,7 +39,6 @@ public class GraGUI extends Thread{
     private JButton niebieskiButton;
     private JButton wyczyscButton;
 
-    public Timer timer;
     public boolean czyKoniecGry; //0-nie, 1-tak
     private int currentX, currentY, oldX, oldY;
     private BufferedImage canvas;
@@ -48,22 +47,28 @@ public class GraGUI extends Thread{
     private int color;//kazdy przycik to cyferka - patrz getColor()//mozna mniej kolorow jak cos, przycisk gumki zmiana koloru na bialo XD
     private boolean kuleczkaWladzy;
     private int liczbGraczy = 3;
-
     private Gra gra;
     private Player klient;
     private Server serwer;
 
     public GraGUI(){
+
+
+
         gra = new Gra(liczbGraczy);
         klient = new Player();
+
+
+
         //oknoGry.setPreferredSize(new Dimension(400, 600));
+       // kuleczkaWladzy = getGra().getGracze()[klient.getPlayerID()].isCzyMojaTura();
         color = 1;
         value = 7;
+
 
         oknoGry.setVisible(true);
         canvas = new BufferedImage(1920,1080,BufferedImage.TYPE_INT_RGB);
         this.start();
-
         //mozna uladnic potencjalnie to ale sa wazniejsze rzeczy
         int tmpCol = color;
         color = 3;//bialy
@@ -146,29 +151,9 @@ public class GraGUI extends Thread{
             }
         });
         //okno startowe
+        //MenuGUI menuGUI = new MenuGUI(GraGUI.this);
+        //menuGUI.setVisible(true);
 
-        MenuGUI menuGUI = new MenuGUI(GraGUI.this);
-        menuGUI.setVisible(true);
-
-        //Pasek czasu------------------------------------------------------------------------
-        progressBar = new JProgressBar(JProgressBar.VERTICAL, 0, 10);
-        progressBar.setValue(10);
-        ActionListener listener = new ActionListener() {
-            int counter = 10;
-
-            public void actionPerformed(ActionEvent ae) {
-                counter--;
-                progressBar.setValue(counter);
-                if (counter < 1) {
-                    JOptionPane.showMessageDialog(null, "Koniec czasu!");
-                    timer.stop();
-                }
-            }
-        };
-        timer = new Timer(1000, listener);
-        timer.start();
-        JOptionPane.showMessageDialog(null, progressBar);
-        //Pasek czasu------------------------------------------------------------------------
     }
 
     String[] hasła = {"kot", "pies", "basen", "buty", "kwiatek"};
