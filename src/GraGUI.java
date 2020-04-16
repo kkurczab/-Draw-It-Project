@@ -50,14 +50,12 @@ public class GraGUI {
 
     public GraGUI() {
         gra = new Gra(5);
-        oknoGry.setPreferredSize(new Dimension(400, 600));
+        //oknoGry.setPreferredSize(new Dimension(400, 600));
 
 
 
         color = 1;
         value = 15;
-        gra = new Gra(5);
-        //oknoGry.setPreferredSize(new Dimension(400, 600));
 
         oknoGry.setVisible(true);
         canvas = new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_RGB);
