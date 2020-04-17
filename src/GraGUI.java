@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
+import java.nio.file.FileAlreadyExistsException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -43,17 +44,16 @@ public class GraGUI extends Thread{
     public boolean czyKoniecGry; //0-nie, 1-tak
     private int currentX, currentY, oldX, oldY;
     private BufferedImage canvas;
-    private boolean clicked;
     private int value;//grubosc pedzla do zmiany, tak do 50 grubosc, jakis slider bylby spoko, zmiana value zmiana geubosci1do1
     private int color;//kazdy przycik to cyferka - patrz getColor()//mozna mniej kolorow jak cos, przycisk gumki zmiana koloru na bialo XD
     private boolean kuleczkaWladzy;
-    private int liczbGraczy = 3;
+    private int liczbGraczy = 2;
 
     private Gra gra;
     private Player klient;
     private Server serwer;
 
-    public GraGUI(){
+    public GraGUI() {
         gra = new Gra(liczbGraczy);
         klient = new Player();
         //oknoGry.setPreferredSize(new Dimension(400, 600));
@@ -61,23 +61,32 @@ public class GraGUI extends Thread{
         value = 7;
 
         oknoGry.setVisible(true);
-        canvas = new BufferedImage(1920,1080,BufferedImage.TYPE_INT_RGB);
+        canvas = new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_RGB);
         this.start();
 
         //mozna uladnic potencjalnie to ale sa wazniejsze rzeczy
-        int tmpCol = color;
+        //int tmpCol = color;
         color = 3;//bialy
         colorScreen();
-        color = tmpCol;
+        //color = tmpCol;
         planszaRysunku.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
+
             public void mouseDragged(MouseEvent e) {
-                if(kuleczkaWladzy) {
+                if (kuleczkaWladzy) {
                     currentX = e.getX();
                     currentY = e.getY();
+                    klient.setCurrentX(currentX);
+                    klient.setCurrentY(currentY);
+                    klient.wyslijCurrentX();
+                    klient.wyslijCurrentY();
                     updateCanvas();
                     oldX = currentX;
                     oldY = currentY;
+                    klient.setOldX(oldX);
+                    klient.setOldY(oldY);
+                    klient.wyslijOldX();
+                    klient.wyslijOldY();
                 }
             }
         });
@@ -86,12 +95,14 @@ public class GraGUI extends Thread{
         planszaRysunku.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                if(kuleczkaWladzy) {
-                    clicked = true;
+                if (kuleczkaWladzy) {
                     oldX = e.getX();
                     oldY = e.getY();
+                    klient.setOldX(oldX);
+                    klient.setOldY(oldY);
+                    klient.wyslijOldX();
+                    klient.wyslijOldY();
                     updateCanvas();
-                    clicked = false;
                 }
             }
         });
@@ -100,53 +111,54 @@ public class GraGUI extends Thread{
         czarnyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-               // System.exit(0);
                 color = 1;
+                klient.setKolor(color);
                 klient.wyslijKolor();
             }
         });
         szaryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                // System.exit(0);
                 color = 2;
+                klient.setKolor(color);
                 klient.wyslijKolor();
             }
         });
         czerwonyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                // System.exit(0);
                 color = 4;
+                klient.setKolor(color);
                 klient.wyslijKolor();
             }
         });
         zielonyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                // System.exit(0);
                 color = 5;
+                klient.setKolor(color);
                 klient.wyslijKolor();
             }
         });
         niebieskiButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                // System.exit(0);
                 color = 6;
+                klient.setKolor(color);
                 klient.wyslijKolor();
             }
         });
         wyczyscButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                // System.exit(0);
                 color = 3;
+                klient.setKolor(color);
                 klient.wyslijKolor();
             }
         });
+    }
         //okno startowe
-
+/*
         MenuGUI menuGUI = new MenuGUI(GraGUI.this);
         menuGUI.setVisible(true);
 
@@ -170,7 +182,7 @@ public class GraGUI extends Thread{
         JOptionPane.showMessageDialog(null, progressBar);
         //Pasek czasu------------------------------------------------------------------------
     }
-
+*/
     String[] hasła = {"kot", "pies", "basen", "buty", "kwiatek"};
 
     public void czyZgadles(int x, GraGUI graGUI){
@@ -253,13 +265,10 @@ public class GraGUI extends Thread{
         Graphics2D g2d = canvas.createGraphics();
         g2d.setPaint(getColor());
 
-        if (clicked)
-            g2d.fillOval(oldX - ((int) value / 2), oldY - ((int) value / 2), (int) value, (int) value);
-        else {
+            //g2d.fillOval(oldX - ((int) value / 2), oldY - ((int) value / 2), (int) value, (int) value);
             g2d.setStroke(new BasicStroke((float) value, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
             g2d.drawLine(oldX, oldY, currentX, currentY);
             g2d.setStroke(new BasicStroke(1.0f));
-        }
         planszaRysunku.repaint();
     }
     private Color getColor() {
@@ -318,6 +327,11 @@ public class GraGUI extends Thread{
         dolaczDoGry();
 
         while (true){
+            try {
+                Thread.sleep(0);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             synchronizeValues();
         }
     }
@@ -330,21 +344,25 @@ public class GraGUI extends Thread{
             if(klient.getNrGraczaUWladzy()==klient.getPlayerID()){
                 kuleczkaWladzy = true;
 
-                klient.setKolor(color);
-                klient.setCurrentX(currentX);
-                klient.setOldX(oldX);
-                klient.setCurrentY(currentY);
-                klient.setOldY(oldY);
+                //klient.setKolor(color);
+                //klient.setCurrentX(currentX);
+                //klient.setOldX(oldX);
+                //klient.setCurrentY(currentY);
+
+
             }
             else{
-                kuleczkaWladzy = false;
 
+                kuleczkaWladzy = false;
                 color = klient.getKolor();
+                oldX = klient.getOldX();
+                oldY = klient.getOldY();
+
                 currentX = klient.getCurrentX();
                 currentY = klient.getCurrentY();
                 updateCanvas();
-                oldX = klient.getOldX();
-                oldY = klient.getOldY();
+
+
 
                 //System.out.println(oldX);
                // System.out.println(currentX);

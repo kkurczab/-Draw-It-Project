@@ -10,7 +10,7 @@ public class Player {//haslo to ostatni oktet adresu ip
     private int playerID;
     private int[] pozostaliGracze;
     private int nrGraczaUWladzy=-1;
-    private int kolor;
+    private int kolor = 3;
     private int oldX;
     private int oldY;
     private int currentX;
@@ -133,30 +133,21 @@ public class Player {//haslo to ostatni oktet adresu ip
 
         public void run(){
 
-
-                System.out.println(nrGraczaUWladzy + "wladza");
-
             while (true){
+                //Thread.yield();
                 synchroDanych();
             }
         }
 
         public void synchroDanych(){
                 try {
-
                     flaga = daneIN.readInt();
-                    if(flaga == 0) {
+                    if(flaga == 0)
                         nrGraczaUWladzy = daneIN.readInt();
-
-                        System.out.println("wladza ha" + nrGraczaUWladzy);
-                    }
                     if (nrGraczaUWladzy != playerID) {
-                        System.out.println("Przegryw" + playerID);
-                        if(flaga == 1) {
-                            System.out.println("przed kolorem" + kolor);
+                       // System.out.println("Przegryw" + playerID);
+                        if(flaga == 1)
                             kolor = daneIN.readInt();
-                            System.out.println("po kolorze" + kolor);
-                        }
                         if(flaga == 3)
                             oldX = daneIN.readInt();
                         if(flaga == 4)

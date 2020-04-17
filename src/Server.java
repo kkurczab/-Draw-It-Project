@@ -13,7 +13,7 @@ public class Server {
     private int oldY;
     private int currentX;
     private int currentY;
-    int kolorBuff=1;
+    int kolorBuff;
     int oldXBuff;
     int oldYBuff;
     int currentXBuff;
@@ -42,7 +42,7 @@ public class Server {
 
     ///////////////////Konstruktor
     public Server(){
-        this.maxLiczbaGraczy = 3;
+        this.maxLiczbaGraczy = 2;
         gra = new Gra(maxLiczbaGraczy);
         nrGraczaUWladzy =gra.losujNrGracza();//trzeba przeniesc do zmiany tury czy czegos
         gracze = new PolaczenieDoKlienta[maxLiczbaGraczy];
@@ -92,7 +92,7 @@ public class Server {
                         flaga = daneIN.readInt();
                         if(flaga == 1)
                             kolorBuff = daneIN.readInt();
-                        System.out.println(kolorBuff);
+                       // System.out.println(kolorBuff);
                         if(flaga == 3)
                             oldXBuff = daneIN.readInt();
                         if(flaga == 4)
@@ -104,7 +104,7 @@ public class Server {
                     }
                     else{
                         if(kolor != kolorBuff) {
-                            System.out.println("wysylam kolor teraz");
+                            //System.out.println("wysylam kolor teraz");
                             kolor = kolorBuff;
                             flaga = 1;
                             daneOUT.writeInt(flaga);
