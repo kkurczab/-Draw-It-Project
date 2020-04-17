@@ -3,7 +3,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
-import java.nio.file.FileAlreadyExistsException;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -54,15 +53,18 @@ public class GraGUI extends Thread{
     private Server serwer;
 
     public GraGUI() {
+        canvas = new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_RGB);
         gra = new Gra(liczbGraczy);
         klient = new Player();
+        MenuGUI menuGUI = new MenuGUI(GraGUI.this);
+        menuGUI.setVisible(true);
         //oknoGry.setPreferredSize(new Dimension(400, 600));
         color = 1;
         value = 7;
 
-        oknoGry.setVisible(true);
-        canvas = new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_RGB);
-        this.start();
+
+
+
 
         //mozna uladnic potencjalnie to ale sa wazniejsze rzeczy
         //int tmpCol = color;
@@ -156,11 +158,9 @@ public class GraGUI extends Thread{
                 klient.wyslijKolor();
             }
         });
-    }
         //okno startowe
-/*
-        MenuGUI menuGUI = new MenuGUI(GraGUI.this);
-        menuGUI.setVisible(true);
+
+
 
         //Pasek czasu------------------------------------------------------------------------
         progressBar = new JProgressBar(JProgressBar.VERTICAL, 0, 10);
@@ -182,7 +182,7 @@ public class GraGUI extends Thread{
         JOptionPane.showMessageDialog(null, progressBar);
         //Pasek czasu------------------------------------------------------------------------
     }
-*/
+
     String[] hasła = {"kot", "pies", "basen", "buty", "kwiatek"};
 
     public void czyZgadles(int x, GraGUI graGUI){
@@ -265,7 +265,7 @@ public class GraGUI extends Thread{
         Graphics2D g2d = canvas.createGraphics();
         g2d.setPaint(getColor());
 
-            //g2d.fillOval(oldX - ((int) value / 2), oldY - ((int) value / 2), (int) value, (int) value);
+            g2d.fillOval(oldX - ((int) value / 2), oldY - ((int) value / 2), (int) value, (int) value);
             g2d.setStroke(new BasicStroke((float) value, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
             g2d.drawLine(oldX, oldY, currentX, currentY);
             g2d.setStroke(new BasicStroke(1.0f));
@@ -336,6 +336,9 @@ public class GraGUI extends Thread{
         }
     }
 
+    public Player getKlient() {
+        return klient;
+    }
 
 /////
 

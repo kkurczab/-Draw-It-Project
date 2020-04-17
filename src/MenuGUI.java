@@ -45,16 +45,21 @@ public class MenuGUI extends JDialog{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try{
-                    graGUI.getGra().getGracze()[0].setNazwaGracza(imie1.getText());
-                    dispose();
+
                     if(graGUI.czyKoniecGry != false){
                         KoniecGry koniecGry = new KoniecGry(graGUI);
                         koniecGry.setVisible(true);
                     }
                     else {
-                        WaitingGUI waitingGUI = new WaitingGUI(graGUI);
-                        waitingGUI.setVisible(true);
+                        if(graGUI.getKlient().getPlayerID() == -5) {//brak wczesniejszych udanych polaczen z serwerem
+                            new Thread(() -> graGUI.stworzGre()).start();
+                            graGUI.start();
+                            //WaitingGUI waitingGUI = new WaitingGUI(graGUI);
+                            //waitingGUI.setVisible(true);
+                        }
+                        graGUI.getGra().getGracze()[graGUI.getKlient().getPlayerID()].setNazwaGracza(imie1.getText());
                     }
+                    dispose();
                 }catch (IllegalArgumentException ee){
                     JOptionPane.showMessageDialog(null, "Podaj imię!");
                 }
@@ -65,11 +70,15 @@ public class MenuGUI extends JDialog{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 try{
-                    graGUI.getGra().getGracze()[0].setNazwaGracza(imie1.getText());
-                    dispose();
-
                     OknoHasła oknoHasła = new OknoHasła(graGUI);
                     oknoHasła.setVisible(true);
+                    if(graGUI.getKlient().getPlayerID() == -5){//brak wczesniejszych udanych polaczen z serwerem
+                        graGUI.start();
+                    }
+                    graGUI.getGra().getGracze()[graGUI.getKlient().getPlayerID()].setNazwaGracza(imie1.getText());
+                    dispose();
+
+
                 }catch (IllegalArgumentException ee){
                     JOptionPane.showMessageDialog(null, "Podaj imię!");
                 }

@@ -7,7 +7,7 @@ import java.net.*;
 public class Player {//haslo to ostatni oktet adresu ip
     private byte[] oktetyIP;
     private PolaczenieOdKlienta polaczenieOdKlienta;
-    private int playerID;
+    private int playerID = -5;
     private int[] pozostaliGracze;
     private int nrGraczaUWladzy=-1;
     private int kolor = 3;
@@ -18,7 +18,7 @@ public class Player {//haslo to ostatni oktet adresu ip
     private int flaga;
 
     /////////////Metody
-    public void setOktet4(int oktet4) {
+    public void setOktet4(int oktet4) throws IllegalArgumentException{
         if(oktet4 < 256 && oktet4 > 0)
             this.oktetyIP[3] = (byte)oktet4;
         else
@@ -75,9 +75,11 @@ public class Player {//haslo to ostatni oktet adresu ip
     public Player() {
         try {
             oktetyIP = InetAddress.getLocalHost().getAddress();
-        }catch (UnknownHostException e){}
+        }catch (UnknownHostException e){
+            System.out.println("wyjakte IP");
+        }
 
-        playerID = -1;//serwer nie wstal
+        //playerID = -1;//serwer nie wstal
 
     }
     public void polaczZSerwerem(){

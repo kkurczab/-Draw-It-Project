@@ -20,7 +20,12 @@ public class OknoHasła extends JDialog {
         STARTButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                dispose();
+                try {
+                    graGUI.getKlient().setOktet4(Integer.parseInt(String.valueOf(hasło.getPassword())));
+                    dispose();
+                }catch(IllegalArgumentException e){
+                    System.out.println("Bledne haslo");
+                }
             }
         });
 

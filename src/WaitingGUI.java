@@ -16,9 +16,12 @@ public class WaitingGUI extends JDialog{
             public void actionPerformed(ActionEvent actionEvent) {
                 int k = 1;
                 //...
-                if(k == 5){
-                    NowaTura nowaTura = new NowaTura(graGUI);
-                    nowaTura.setVisible(true);
+                //moge to napisac jutro
+                k=2;
+                if(k == 2){
+                    dispose();
+                   // NowaTura nowaTura = new NowaTura(graGUI);
+                   // nowaTura.setVisible(true);
                 }
             }
         });
