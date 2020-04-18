@@ -19,32 +19,11 @@ public class MenuGUI extends JDialog{
         setLocation(430,200);
         pack();
 
-        HOSTGAMEButton.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                if(e.getKeyCode() == KeyEvent.VK_ENTER){
-                    try{
-                        graGUI.getGra().getGracze()[0].setNazwaGracza(imie1.getText());
-                        dispose();
-                        if(graGUI.czyKoniecGry != false){
-                            KoniecGry koniecGry = new KoniecGry(graGUI);
-                            koniecGry.setVisible(true);
-                        }
-                        else{
-                            NowaTura nowaTura = new NowaTura(graGUI);
-                            nowaTura.setVisible(true);
-                        }
-                    }catch (IllegalArgumentException ee){
-                        JOptionPane.showMessageDialog(null, "Podaj imiona wszystkich 5 graczy!");
-                    }
-                }
-            }
-        });
+
 
         HOSTGAMEButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                try{
 
                     if(graGUI.czyKoniecGry != false){
                         KoniecGry koniecGry = new KoniecGry(graGUI);
@@ -57,19 +36,21 @@ public class MenuGUI extends JDialog{
                             //WaitingGUI waitingGUI = new WaitingGUI(graGUI);
                             //waitingGUI.setVisible(true);
                         }
-                        Thread.sleep(1000);
-                        short otrzymanyNR = graGUI.getKlient().getOtrzymanyNR();
-                        if(graGUI.getKlient().getPlayerID() != otrzymanyNR){
-                            graGUI.getGra().getGracze()[otrzymanyNR].setNazwaGracza(graGUI.getKlient().getSlowo());
+                        try {
+                            Thread.sleep(1000);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
+                        try{
                         graGUI.getGra().getGracze()[graGUI.getKlient().getPlayerID()].setNazwaGracza(imie1.getText());
+                        }catch (IllegalArgumentException ee){
+                            JOptionPane.showMessageDialog(null, "Podaj imię!");
+                        }
                         graGUI.getKlient().setSlowo(imie1.getText());
                         graGUI.getKlient().wyslijSlowo();
                     }
                     dispose();
-                }catch (IllegalArgumentException | InterruptedException ee){
-                    JOptionPane.showMessageDialog(null, "Podaj imię!");
-                }
+
             }
         });
 

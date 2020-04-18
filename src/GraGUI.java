@@ -22,15 +22,11 @@ public class GraGUI extends Thread{
     private JFormattedTextField imie1;
     private JFormattedTextField imie2;
     private JFormattedTextField imie3;
-    private JFormattedTextField imie4;
-    private JFormattedTextField imie5;
     private JButton czarnyButton;
     private JProgressBar progressBar;
     private JFormattedTextField punkty1;
     private JFormattedTextField punkty2;
     private JFormattedTextField punkty3;
-    private JFormattedTextField punkty4;
-    private JFormattedTextField punkty5;
     private JComboBox wybórKoloru;
     private JButton zielonyButton;
     private JButton szaryButton;
@@ -38,6 +34,8 @@ public class GraGUI extends Thread{
     private JButton niebieskiButton;
     private JButton wyczyscButton;
     private JFormattedTextField haslo;
+    private JTextArea chatPole;
+    private JButton wyslijButton;
 
     public Timer timer;
     public boolean czyKoniecGry; //0-nie, 1-tak
@@ -47,6 +45,7 @@ public class GraGUI extends Thread{
     private Byte color;//kazdy przycik to cyferka - patrz getColor()//mozna mniej kolorow jak cos, przycisk gumki zmiana koloru na bialo XD
     private boolean kuleczkaWladzy;
     private int liczbGraczy = 2;
+
 
     private Gra gra;
     private Player klient;
@@ -176,6 +175,20 @@ public class GraGUI extends Thread{
                 }
             }
         });
+
+        wyslijButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent actionEvent) {
+                String wiadomosc = chatWpisz.getText();
+                if(!wiadomosc.equals("")) {
+                    klient.setSlowo(chatWpisz.getText());
+                    klient.wyslijSlowo();
+                    chatWpisz.setText("");
+                    klient.setSlowo("");
+                   System.out.println(klient.getSlowo()+"x");
+                }
+            }
+        });
         //okno startowe
 
 
@@ -197,8 +210,9 @@ public class GraGUI extends Thread{
         };
         timer = new Timer(1000, listener);
         timer.start();
-        JOptionPane.showMessageDialog(null, progressBar);
+        //JOptionPane.showMessageDialog(null, progressBar);
         //Pasek czasu------------------------------------------------------------------------
+
     }
 
     String[] hasła = {"kot", "pies", "basen", "buty", "kwiatek"};
@@ -283,11 +297,10 @@ public class GraGUI extends Thread{
     public void updateCanvas() {
         Graphics2D g2d = canvas.createGraphics();
         g2d.setPaint(getColor());
-
-            g2d.fillOval(oldX - (value / 2), oldY - (value / 2), value, value);
-            g2d.setStroke(new BasicStroke((float) value, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-            g2d.drawLine(oldX, oldY, currentX, currentY);
-            g2d.setStroke(new BasicStroke(1.0f));
+        g2d.fillOval(oldX - (value / 2), oldY - (value / 2), value, value);
+        g2d.setStroke(new BasicStroke((float) value, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        g2d.drawLine(oldX, oldY, currentX, currentY);
+        g2d.setStroke(new BasicStroke(1.0f));
         planszaRysunku.repaint();
     }
     private Color getColor() {
@@ -344,13 +357,13 @@ public class GraGUI extends Thread{
     }
     public void run(){
         dolaczDoGry();
-
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         while (true){
-            try {
-                Thread.sleep(0);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+
             imie1.setText(gra.getGracze()[0].getNazwaGracza());
             imie2.setText(gra.getGracze()[1].getNazwaGracza());
             synchronizeValues();
@@ -365,31 +378,37 @@ public class GraGUI extends Thread{
 
 
         private void synchronizeValues(){
+
             if(klient.getNrGraczaUWladzy()==klient.getPlayerID()){
                 kuleczkaWladzy = true;
-
-                //klient.setKolor(color);
-                //klient.setCurrentX(currentX);
-                //klient.setOldX(oldX);
-                //klient.setCurrentY(currentY);
-
-
             }
             else{
+
+
+                short otrzymanyNR = klient.getOtrzymanyNR();
+                //if(klient.getPlayerID() != otrzymanyNR){
+              //      gra.getGracze()[otrzymanyNR].setNazwaGracza(klient.getSlowo());
+                //}
 
                 kuleczkaWladzy = false;
                 color = klient.getKolor();
                 oldX = klient.getOldX();
                 oldY = klient.getOldY();
-                updateCanvas();
                 currentX = klient.getCurrentX();
                 currentY = klient.getCurrentY();
+                updateCanvas();
+
+
 
 
 
 
                 //System.out.println(oldX);
                // System.out.println(currentX);
+            }
+            if(!klient.getSlowo().equals("")){
+                chatPole.append(gra.getGracze()[klient.getOtrzymanyNR()].getNazwaGracza() + ": " + klient.getSlowo() + "\n");
+                klient.setSlowo("");
             }
 
 

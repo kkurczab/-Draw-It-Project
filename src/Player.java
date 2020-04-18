@@ -104,7 +104,7 @@ public class Player {//haslo to ostatni oktet adresu ip
             polaczenieOdKlienta.daneOUT.writeByte(kolor);
             polaczenieOdKlienta.daneOUT.flush();
         }catch (IOException e){
-            System.out.println("");
+
         }
     }
 
@@ -115,7 +115,10 @@ public class Player {//haslo to ostatni oktet adresu ip
             polaczenieOdKlienta.daneOUT.writeShort(playerID);
             polaczenieOdKlienta. daneOUT.writeUTF(slowo);
             polaczenieOdKlienta.daneOUT.flush();
-        }catch (IOException e){}
+            //slowo = "";
+        }catch (IOException e){
+            System.out.println("zle sie dzieje");
+        }
     }
 
     public void wyslijOldX() {
@@ -167,15 +170,16 @@ public class Player {//haslo to ostatni oktet adresu ip
         public void synchroDanych(){
                 try {
                     flaga = daneIN.readByte();
+                    if(flaga == 2) {
+                        otrzymanyNR = daneIN.readShort();
+                        slowo = daneIN.readUTF();
+                    }
                     if(flaga == 0)
                         nrGraczaUWladzy = daneIN.readShort();
                     if (nrGraczaUWladzy != playerID) {
                        // System.out.println("Przegryw" + playerID);
                         if(flaga == 1)
                             kolor = daneIN.readByte();
-                        if(flaga == 2)
-                            otrzymanyNR = daneIN.readShort();
-                            slowo = daneIN.readUTF();
                         if(flaga == 3)
                             oldX = daneIN.readShort();
                         if(flaga == 4)
