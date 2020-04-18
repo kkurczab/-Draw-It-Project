@@ -57,10 +57,17 @@ public class MenuGUI extends JDialog{
                             //WaitingGUI waitingGUI = new WaitingGUI(graGUI);
                             //waitingGUI.setVisible(true);
                         }
+                        Thread.sleep(1000);
+                        short otrzymanyNR = graGUI.getKlient().getOtrzymanyNR();
+                        if(graGUI.getKlient().getPlayerID() != otrzymanyNR){
+                            graGUI.getGra().getGracze()[otrzymanyNR].setNazwaGracza(graGUI.getKlient().getSlowo());
+                        }
                         graGUI.getGra().getGracze()[graGUI.getKlient().getPlayerID()].setNazwaGracza(imie1.getText());
+                        graGUI.getKlient().setSlowo(imie1.getText());
+                        graGUI.getKlient().wyslijSlowo();
                     }
                     dispose();
-                }catch (IllegalArgumentException ee){
+                }catch (IllegalArgumentException | InterruptedException ee){
                     JOptionPane.showMessageDialog(null, "Podaj imię!");
                 }
             }
@@ -75,11 +82,15 @@ public class MenuGUI extends JDialog{
                     if(graGUI.getKlient().getPlayerID() == -5){//brak wczesniejszych udanych polaczen z serwerem
                         graGUI.start();
                     }
+                    Thread.sleep(1000);
+
                     graGUI.getGra().getGracze()[graGUI.getKlient().getPlayerID()].setNazwaGracza(imie1.getText());
+                    graGUI.getKlient().setSlowo(imie1.getText());
+                    graGUI.getKlient().wyslijSlowo();
                     dispose();
 
 
-                }catch (IllegalArgumentException ee){
+                }catch (IllegalArgumentException | InterruptedException ee){
                     JOptionPane.showMessageDialog(null, "Podaj imię!");
                 }
             }

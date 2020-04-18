@@ -7,15 +7,17 @@ import java.net.*;
 public class Player {//haslo to ostatni oktet adresu ip
     private byte[] oktetyIP;
     private PolaczenieOdKlienta polaczenieOdKlienta;
-    private int playerID = -5;
+    private short playerID = -5;
     private int[] pozostaliGracze;
-    private int nrGraczaUWladzy=-1;
-    private int kolor = 3;
-    private int oldX;
-    private int oldY;
-    private int currentX;
-    private int currentY;
-    private int flaga;
+    private short nrGraczaUWladzy=-1;
+    private byte kolor = 3;
+    private short oldX;
+    private short oldY;
+    private short currentX;
+    private short currentY;
+    private byte flaga;
+    String slowo;
+    private short otrzymanyNR;
 
     /////////////Metody
     public void setOktet4(int oktet4) throws IllegalArgumentException{
@@ -25,51 +27,61 @@ public class Player {//haslo to ostatni oktet adresu ip
             throw new IllegalArgumentException();
     }
 
-    public int getNrGraczaUWladzy() {
+    public short getNrGraczaUWladzy() {
         return nrGraczaUWladzy;
     }
 
-    public int getKolor() {
+    public byte getKolor() {
         return kolor;
     }
 
-    public void setKolor(int kolor) {
+    public void setKolor(byte kolor) {
         this.kolor = kolor;
     }
 
-    public int getOldX() {
+    public short getOldX() {
         return oldX;
     }
 
-    public void setOldX(int oldX) {
+    public void setOldX(short oldX) {
         this.oldX = oldX;
     }
 
-    public int getOldY() {
+    public short getOldY() {
         return oldY;
     }
 
-    public void setOldY(int oldY) {
+    public void setOldY(short oldY) {
         this.oldY = oldY;
     }
 
-    public int getCurrentX() {
+    public short getCurrentX() {
         return currentX;
     }
 
-    public void setCurrentX(int currentX) {
+    public void setCurrentX(short currentX) {
         this.currentX = currentX;
     }
 
-    public int getCurrentY() {
+    public short getCurrentY() {
         return currentY;
     }
 
-    public void setCurrentY(int currentY) {
+    public void setCurrentY(short currentY) {
         this.currentY = currentY;
     }
 
+    public String getSlowo() {
+        return slowo;
+    }
 
+    public void setSlowo(String slowo) {
+        this.slowo = slowo;
+    }
+
+    public short getOtrzymanyNR() {
+        return otrzymanyNR;
+    }
 
     //////////////Kontruktor
     public Player() {
@@ -88,42 +100,53 @@ public class Player {//haslo to ostatni oktet adresu ip
     public void wyslijKolor() {
         try {
             flaga = 1;
-            polaczenieOdKlienta.daneOUT.writeInt(flaga);
-            polaczenieOdKlienta.daneOUT.writeInt(kolor);
+            polaczenieOdKlienta.daneOUT.writeByte(flaga);
+            polaczenieOdKlienta.daneOUT.writeByte(kolor);
             polaczenieOdKlienta.daneOUT.flush();
         }catch (IOException e){
             System.out.println("");
         }
     }
+
+    public void wyslijSlowo() {
+        try{
+            flaga = 2;
+            polaczenieOdKlienta.daneOUT.writeByte(flaga);
+            polaczenieOdKlienta.daneOUT.writeShort(playerID);
+            polaczenieOdKlienta. daneOUT.writeUTF(slowo);
+            polaczenieOdKlienta.daneOUT.flush();
+        }catch (IOException e){}
+    }
+
     public void wyslijOldX() {
         try{
         flaga = 3;
-        polaczenieOdKlienta.daneOUT.writeInt(flaga);
-        polaczenieOdKlienta. daneOUT.writeInt(oldX);
+        polaczenieOdKlienta.daneOUT.writeByte(flaga);
+        polaczenieOdKlienta. daneOUT.writeShort(oldX);
         polaczenieOdKlienta.daneOUT.flush();
         }catch (IOException e){}
     }
     public void wyslijOldY() {
         try{
         flaga = 4;
-        polaczenieOdKlienta.daneOUT.writeInt(flaga);
-        polaczenieOdKlienta.daneOUT.writeInt(oldY);
+        polaczenieOdKlienta.daneOUT.writeByte(flaga);
+        polaczenieOdKlienta.daneOUT.writeShort(oldY);
         polaczenieOdKlienta.daneOUT.flush();
         }catch (IOException e){}
     }
     public void wyslijCurrentX() {
         try{
         flaga = 5;
-        polaczenieOdKlienta.daneOUT.writeInt(flaga);
-        polaczenieOdKlienta.daneOUT.writeInt(currentX);
+        polaczenieOdKlienta.daneOUT.writeByte(flaga);
+        polaczenieOdKlienta.daneOUT.writeShort(currentX);
         polaczenieOdKlienta.daneOUT.flush();
         }catch (IOException e){}
     }
     public void wyslijCurrentY() {
         try{
         flaga = 6;
-        polaczenieOdKlienta.daneOUT.writeInt(flaga);
-        polaczenieOdKlienta.daneOUT.writeInt(currentY);
+        polaczenieOdKlienta.daneOUT.writeByte(flaga);
+        polaczenieOdKlienta.daneOUT.writeShort(currentY);
         polaczenieOdKlienta.daneOUT.flush();
         }catch (IOException e){}
     }
@@ -143,21 +166,24 @@ public class Player {//haslo to ostatni oktet adresu ip
 
         public void synchroDanych(){
                 try {
-                    flaga = daneIN.readInt();
+                    flaga = daneIN.readByte();
                     if(flaga == 0)
-                        nrGraczaUWladzy = daneIN.readInt();
+                        nrGraczaUWladzy = daneIN.readShort();
                     if (nrGraczaUWladzy != playerID) {
                        // System.out.println("Przegryw" + playerID);
                         if(flaga == 1)
-                            kolor = daneIN.readInt();
+                            kolor = daneIN.readByte();
+                        if(flaga == 2)
+                            otrzymanyNR = daneIN.readShort();
+                            slowo = daneIN.readUTF();
                         if(flaga == 3)
-                            oldX = daneIN.readInt();
+                            oldX = daneIN.readShort();
                         if(flaga == 4)
-                            oldY = daneIN.readInt();
+                            oldY = daneIN.readShort();
                         if(flaga == 5)
-                            currentX = daneIN.readInt();
+                            currentX = daneIN.readShort();
                         if(flaga == 6)
-                            currentY = daneIN.readInt();
+                            currentY = daneIN.readShort();
                     }
                 } catch (IOException e) { }
         }
@@ -169,7 +195,7 @@ public class Player {//haslo to ostatni oktet adresu ip
                 socket = new Socket(InetAddress.getByAddress(new byte[] {(byte)oktetyIP[0], (byte)oktetyIP[1], (byte)oktetyIP[2], (byte)oktetyIP[3]}),51724);
                 daneIN = new DataInputStream(socket.getInputStream());
                 daneOUT = new DataOutputStream(socket.getOutputStream());
-                playerID = daneIN.readInt();
+                playerID = daneIN.readShort();
                 System.out.println("Moj numer gracza to: " + playerID);
                 this.start();
 

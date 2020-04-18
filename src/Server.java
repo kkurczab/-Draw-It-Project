@@ -4,21 +4,23 @@ import java.net.*;
 public class Server {
     private Gra gra;
     private ServerSocket socketSerwer;
-    private int liczbaGraczy;
+    private short liczbaGraczy;
     private PolaczenieDoKlienta[] gracze;
     private int maxLiczbaGraczy;
-    private int nrGraczaUWladzy;
-    private int kolor;
-    private int oldX;
-    private int oldY;
-    private int currentX;
-    private int currentY;
-    int kolorBuff;
-    int oldXBuff;
-    int oldYBuff;
-    int currentXBuff;
-    int currentYBuff;
-    int flaga;//1=kolor, 3 = oldx, 4 = oldy, 5 = curx, 6 = cury
+    private short nrGraczaUWladzy;
+    private byte kolor;
+    private short oldX;
+    private short oldY;
+    private short currentX;
+    private short currentY;
+    private byte kolorBuff;
+    private short oldXBuff;
+    private short oldYBuff;
+    private short currentXBuff;
+    private short currentYBuff;
+    private byte flaga;//1=kolor, 3 = oldx, 4 = oldy, 5 = currx, 6 = curry
+    private String slowo;
+    private String slowoBuff;
 
 
    ///////////////////Metody
@@ -44,7 +46,7 @@ public class Server {
     public Server(){
         this.maxLiczbaGraczy = 2;
         gra = new Gra(maxLiczbaGraczy);
-        nrGraczaUWladzy =gra.losujNrGracza();//trzeba przeniesc do zmiany tury czy czegos
+        nrGraczaUWladzy =(short)gra.losujNrGracza();//trzeba przeniesc do zmiany tury czy czegos
         gracze = new PolaczenieDoKlienta[maxLiczbaGraczy];
         System.out.print("Serwer ruszyl!!!");
         liczbaGraczy = 0;
@@ -62,9 +64,9 @@ public class Server {
         private Socket socket;
         private DataOutputStream daneOUT;
         private DataInputStream daneIN;
-        private int playerID;
+        private short playerID;
 
-        public  PolaczenieDoKlienta(Socket s, int id) {
+        public  PolaczenieDoKlienta(Socket s, short id) {
             socket = s;
             playerID = id;
             try {
@@ -78,65 +80,73 @@ public class Server {
         }
         public void run(){
             try{
-                daneOUT.writeInt(playerID);
+                daneOUT.writeShort(playerID);
                 flaga = 0;
-                    daneOUT.writeInt(flaga);
-                    daneOUT.writeInt(nrGraczaUWladzy);
+                    daneOUT.writeByte(flaga);
+                    daneOUT.writeShort(nrGraczaUWladzy);
                     daneOUT.flush();
                     flaga = -1;
 
                 while(true){
                     Thread.yield();
-
                     if(nrGraczaUWladzy == playerID){
-                        flaga = daneIN.readInt();
+                        flaga = daneIN.readByte();
                         if(flaga == 1)
-                            kolorBuff = daneIN.readInt();
-                       // System.out.println(kolorBuff);
+                            kolorBuff = daneIN.readByte();
+                        if(flaga == 2)
+                            slowoBuff = daneIN.readUTF();
                         if(flaga == 3)
-                            oldXBuff = daneIN.readInt();
+                            oldXBuff = daneIN.readShort();
                         if(flaga == 4)
-                            oldYBuff = daneIN.readInt();
+                            oldYBuff = daneIN.readShort();
                         if(flaga == 5)
-                            currentXBuff = daneIN.readInt();
+                            currentXBuff = daneIN.readShort();
                         if(flaga == 6)
-                            currentYBuff = daneIN.readInt();
+                            currentYBuff = daneIN.readShort();
                     }
                     else{
                         if(kolor != kolorBuff) {
                             //System.out.println("wysylam kolor teraz");
                             kolor = kolorBuff;
                             flaga = 1;
-                            daneOUT.writeInt(flaga);
-                            daneOUT.writeInt(kolor);
+                            daneOUT.writeByte(flaga);
+                            daneOUT.writeByte(kolor);
+                            daneOUT.flush();
+                        }
+                        if(slowo != slowoBuff) {
+                            //System.out.println("wysylam kolor teraz");
+                            slowo = slowoBuff;
+                            flaga = 2;
+                            daneOUT.writeByte(flaga);
+                            daneOUT.writeUTF(slowo);
                             daneOUT.flush();
                         }
                         if(oldX != oldXBuff){
                             oldX = oldXBuff;
                             flaga = 3;
-                            daneOUT.writeInt(flaga);
-                            daneOUT.writeInt(oldX);
+                            daneOUT.writeByte(flaga);
+                            daneOUT.writeShort(oldX);
                             daneOUT.flush();
                         }
                         if( oldY != oldYBuff) {
                             oldY = oldYBuff;
                             flaga = 4;
-                            daneOUT.writeInt(flaga);
-                            daneOUT.writeInt(oldY);
+                            daneOUT.writeByte(flaga);
+                            daneOUT.writeShort(oldY);
                             daneOUT.flush();
                         }
                         if(currentX != currentXBuff) {
                             currentX = currentXBuff;
                             flaga = 5;
-                            daneOUT.writeInt(flaga);
-                            daneOUT.writeInt(currentX);
+                            daneOUT.writeByte(flaga);
+                            daneOUT.writeShort(currentX);
                             daneOUT.flush();
                         }
                         if(currentY != currentYBuff) {
                             currentY = currentYBuff;
                             flaga = 6;
-                            daneOUT.writeInt(flaga);
-                            daneOUT.writeInt(currentY);
+                            daneOUT.writeByte(flaga);
+                            daneOUT.writeShort(currentY);
                             daneOUT.flush();
                         }
                     }

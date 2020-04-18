@@ -41,10 +41,10 @@ public class GraGUI extends Thread{
 
     public Timer timer;
     public boolean czyKoniecGry; //0-nie, 1-tak
-    private int currentX, currentY, oldX, oldY;
+    private short currentX, currentY, oldX, oldY;
     private BufferedImage canvas;
     private int value;//grubosc pedzla do zmiany, tak do 50 grubosc, jakis slider bylby spoko, zmiana value zmiana geubosci1do1
-    private int color;//kazdy przycik to cyferka - patrz getColor()//mozna mniej kolorow jak cos, przycisk gumki zmiana koloru na bialo XD
+    private Byte color;//kazdy przycik to cyferka - patrz getColor()//mozna mniej kolorow jak cos, przycisk gumki zmiana koloru na bialo XD
     private boolean kuleczkaWladzy;
     private int liczbGraczy = 2;
 
@@ -76,8 +76,8 @@ public class GraGUI extends Thread{
 
             public void mouseDragged(MouseEvent e) {
                 if (kuleczkaWladzy) {
-                    currentX = e.getX();
-                    currentY = e.getY();
+                    currentX = (short)e.getX();
+                    currentY = (short)e.getY();
                     klient.setCurrentX(currentX);
                     klient.setCurrentY(currentY);
                     klient.wyslijCurrentX();
@@ -98,10 +98,16 @@ public class GraGUI extends Thread{
             @Override
             public void mousePressed(MouseEvent e) {
                 if (kuleczkaWladzy) {
-                    oldX = e.getX();
-                    oldY = e.getY();
+                    oldX = (short)e.getX();
+                    oldY = (short)e.getY();
+                    currentX = oldX;
+                    currentY = oldY;
+                    klient.setCurrentX(currentX);
+                    klient.setCurrentY(currentY);
                     klient.setOldX(oldX);
                     klient.setOldY(oldY);
+                    klient.wyslijCurrentX();
+                    klient.wyslijCurrentY();
                     klient.wyslijOldX();
                     klient.wyslijOldY();
                     updateCanvas();
@@ -113,49 +119,61 @@ public class GraGUI extends Thread{
         czarnyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                color = 1;
-                klient.setKolor(color);
-                klient.wyslijKolor();
+                if(kuleczkaWladzy) {
+                    color = 1;
+                    klient.setKolor(color);
+                    klient.wyslijKolor();
+                }
             }
         });
         szaryButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                color = 2;
-                klient.setKolor(color);
-                klient.wyslijKolor();
+                if(kuleczkaWladzy) {
+                    color = 2;
+                    klient.setKolor(color);
+                    klient.wyslijKolor();
+                }
             }
         });
         czerwonyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                color = 4;
-                klient.setKolor(color);
-                klient.wyslijKolor();
+                if(kuleczkaWladzy) {
+                    color = 4;
+                    klient.setKolor(color);
+                    klient.wyslijKolor();
+                }
             }
         });
         zielonyButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                color = 5;
-                klient.setKolor(color);
-                klient.wyslijKolor();
+                if(kuleczkaWladzy) {
+                    color = 5;
+                    klient.setKolor(color);
+                    klient.wyslijKolor();
+                }
             }
         });
         niebieskiButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                color = 6;
-                klient.setKolor(color);
-                klient.wyslijKolor();
+                if(kuleczkaWladzy) {
+                    color = 6;
+                    klient.setKolor(color);
+                    klient.wyslijKolor();
+                }
             }
         });
         wyczyscButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                color = 3;
-                klient.setKolor(color);
-                klient.wyslijKolor();
+                if(kuleczkaWladzy) {
+                    color = 3;
+                    klient.setKolor(color);
+                    klient.wyslijKolor();
+                }
             }
         });
         //okno startowe
@@ -206,30 +224,31 @@ public class GraGUI extends Thread{
 
     public void refresh() {//metoda oswiezajaca GUI
         //ustawienie rankingu graczy
-        Integer[] ranking = new Integer[5];
-        for(int i = 0; i < 5; i++){
+        Integer[] ranking = new Integer[liczbGraczy];
+        for(int i = 0; i < liczbGraczy; i++){
             ranking[i] = gra.getGracze()[i].getLiczbaPunktow();
         }
         Arrays.sort(ranking, Collections.reverseOrder()); //od najw. do najm. wartosci {100, 40, 20, 8, ... itd.}
         punkty1.setValue(ranking[0]);
         punkty2.setValue(ranking[1]);
-        punkty3.setValue(ranking[2]);
-        punkty4.setValue(ranking[3]);
-        punkty5.setValue(ranking[4]);
+        //punkty3.setValue(ranking[2]);
+        //punkty4.setValue(ranking[3]);
+        //punkty5.setValue(ranking[4]);
 
         int k = 1;
         Gracz[] listaGraczy = gra.getGracze();
         Integer[] x = ranking; //zmienne pomocnicze
 
-        for(int i = 0; i < 5; i++){ //RANKING
+        for(int i = 0; i < liczbGraczy; i++){ //RANKING
              if(getMinValue(ranking) == listaGraczy[i].getLiczbaPunktow()){
-                 if(k==5){
+                 if(k==2){
                      imie1.setText(listaGraczy[i].getNazwaGracza());
                      k++;
-                 }if(k==4){
+                 }if(k==1){
                      imie2.setText(listaGraczy[i].getNazwaGracza());
                      k++;
-                 }if(k==3){
+
+                 }/*if(k==3){
                      imie3.setText(listaGraczy[i].getNazwaGracza());
                      k++;
                  }if(k==2){
@@ -239,7 +258,7 @@ public class GraGUI extends Thread{
                      imie5.setText(listaGraczy[i].getNazwaGracza());
                      k++;
                  }
-
+                */
                 x = Arrays.copyOf(x, x.length - 1); //usuwa ostatni element z "x"
                 removeElement(listaGraczy, i);
             }
@@ -265,7 +284,7 @@ public class GraGUI extends Thread{
         Graphics2D g2d = canvas.createGraphics();
         g2d.setPaint(getColor());
 
-            g2d.fillOval(oldX - ((int) value / 2), oldY - ((int) value / 2), (int) value, (int) value);
+            g2d.fillOval(oldX - (value / 2), oldY - (value / 2), value, value);
             g2d.setStroke(new BasicStroke((float) value, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
             g2d.drawLine(oldX, oldY, currentX, currentY);
             g2d.setStroke(new BasicStroke(1.0f));
@@ -332,6 +351,8 @@ public class GraGUI extends Thread{
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            imie1.setText(gra.getGracze()[0].getNazwaGracza());
+            imie2.setText(gra.getGracze()[1].getNazwaGracza());
             synchronizeValues();
         }
     }
@@ -360,10 +381,10 @@ public class GraGUI extends Thread{
                 color = klient.getKolor();
                 oldX = klient.getOldX();
                 oldY = klient.getOldY();
-
+                updateCanvas();
                 currentX = klient.getCurrentX();
                 currentY = klient.getCurrentY();
-                updateCanvas();
+
 
 
 
