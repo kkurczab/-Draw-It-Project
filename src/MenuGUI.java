@@ -25,7 +25,7 @@ public class MenuGUI extends JDialog{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
 
-                    if(graGUI.czyKoniecGry != false){
+                    if(graGUI.getCzyKoniecGry() != false){
                         KoniecGry koniecGry = new KoniecGry(graGUI);
                         koniecGry.setVisible(true);
                     }

@@ -88,14 +88,14 @@ public class Server {
                 while (true) {
                     Thread.yield();
                     try {
-                        if (!slowo.equals("")) {
+                        if (!slowo.equals("") && otrzymanyNR != playerID) {
                             flaga = 2;
                             daneOUT.writeByte(flaga);
                             daneOUT.writeShort(otrzymanyNR);
                             daneOUT.writeUTF(slowo);
                             daneOUT.flush();
                             slowo = "";
-                        }synchronized (this){
+                        }
                         if (flagaImie) {
                             flaga = 3;
                             daneOUT.writeByte(flaga);
@@ -103,7 +103,7 @@ public class Server {
                             daneOUT.writeUTF(imiona[1]);
                             daneOUT.flush();
                             flagaImie = false;
-                        }}
+                        }
                         if (nrGraczaUWladzy != playerID) {
                             if (kolor != kolorBuff) {
                                 kolor = kolorBuff;

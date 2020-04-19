@@ -25,7 +25,6 @@ public class GraGUI extends Thread{
     private JFormattedTextField punkty1;
     private JFormattedTextField punkty2;
     private JFormattedTextField punkty3;
-    private JComboBox wybórKoloru;
     private JButton zielonyButton;
     private JButton szaryButton;
     private JButton czerwonyButton;
@@ -35,15 +34,14 @@ public class GraGUI extends Thread{
     private JTextArea chatPole;
     private JButton wyslijButton;
 
-    public Timer timer;
-    public boolean czyKoniecGry; //0-nie, 1-tak
+    private Timer timer;
+    private boolean czyKoniecGry; //0-nie, 1-tak
     private short currentX, currentY;
     private BufferedImage canvas;
     private int value;//zmiana value zmiana geubosci1do1
     private Byte color;//kazdy przycik to cyferka - patrz getColor()
     private boolean kuleczkaWladzy;
     private int liczbGraczy = 2;
-    private int seed;
 
 
     private Gra gra;
@@ -162,6 +160,7 @@ public class GraGUI extends Thread{
                 String wiadomosc = chatWpisz.getText();
                 if(!wiadomosc.equals("")) {
                     klient.setSlowo(chatWpisz.getText());
+                    chatPole.append(gra.getGracze()[klient.getPlayerID()].getNazwaGracza() + ": " + chatWpisz.getText() + "\n");
                     klient.wyslijSlowo();
                     chatWpisz.setText("");
                     klient.setSlowo("");
@@ -173,22 +172,7 @@ public class GraGUI extends Thread{
 
 
         //Pasek czasu------------------------------------------------------------------------
-        progressBar = new JProgressBar(JProgressBar.VERTICAL, 0, 10);
-        progressBar.setValue(10);
-        ActionListener listener = new ActionListener() {
-            int counter = 10;
 
-            public void actionPerformed(ActionEvent ae) {
-                counter--;
-                progressBar.setValue(counter);
-                if (counter < 1) {
-                    JOptionPane.showMessageDialog(null, "Koniec czasu!");
-                    timer.stop();
-                }
-            }
-        };
-        timer = new Timer(1000, listener);
-        timer.start();
         //JOptionPane.showMessageDialog(null, progressBar);
         //Pasek czasu------------------------------------------------------------------------
 
@@ -199,10 +183,6 @@ public class GraGUI extends Thread{
         //if(x == )
     }
 
-
-    public void removeElement(Gracz[] tab, int removeIndex){ //usuwa element z wybranego indeksu tablicy
-        System.arraycopy(tab, removeIndex + 1, tab, removeIndex, tab.length - 1 - removeIndex);
-    }
 
     public static int getMinValue(Integer[] numbers){
         int minValue = numbers[0];
@@ -243,7 +223,6 @@ public class GraGUI extends Thread{
                      k++;
                  }*/
                 x = Arrays.copyOf(x, x.length - 1); //usuwa ostatni element z "x"
-                removeElement(listaGraczy, i);
             }
         }
 
@@ -262,6 +241,23 @@ public class GraGUI extends Thread{
                 }
 
             };
+
+        progressBar = new JProgressBar(JProgressBar.VERTICAL, 0, 10);
+        progressBar.setValue(10);
+        ActionListener listener = new ActionListener() {
+            int counter = 10;
+
+            public void actionPerformed(ActionEvent ae) {
+                counter--;
+                progressBar.setValue(counter);
+                if (counter < 1) {
+                    JOptionPane.showMessageDialog(null, "Koniec czasu!");
+                    timer.stop();
+                }
+            }
+        };
+        timer = new Timer(1000, listener);
+
     }
     public void updateCanvas() {
         Graphics2D g2d = canvas.createGraphics();
@@ -311,6 +307,7 @@ public class GraGUI extends Thread{
     }
 
 
+
     public static void main(String[] args) {
         JFrame frame = new JFrame("GraGUI");
         frame.setContentPane(new GraGUI().oknoGry);
@@ -331,14 +328,12 @@ public class GraGUI extends Thread{
             haslo.setText(gra.getHaslo());
 
 
-            if (klient.getOtrzymanyNR() == 0)
-                imie1.setText(gra.getGracze()[0].getNazwaGracza());
-            if(klient.getOtrzymanyNR() == 1)
-                imie2.setText(gra.getGracze()[1].getNazwaGracza());
 
+            timer.start();
         while (true){
-
-            //refresh();
+            //imie1.setText(gra.getGracze()[0].getNazwaGracza());
+            //imie2.setText(gra.getGracze()[1].getNazwaGracza());
+            refresh();
 
             synchronizeValues();
 
@@ -358,7 +353,7 @@ public class GraGUI extends Thread{
                 }catch (IllegalArgumentException e){}
                 imie1.setText(gra.getGracze()[0].getNazwaGracza());
             }
-            if(gra.getGracze()[1].getNazwaGracza().equals("")){
+            if(gra.getGracze()[1].getNazwaGracza().isBlank()){
                 try {
                     gra.getGracze()[1].setNazwaGracza(klient.getImiona()[1]);
                 }catch (IllegalArgumentException e){}
@@ -377,8 +372,9 @@ public class GraGUI extends Thread{
                 updateCanvas();
 
             }
-            if(!klient.getSlowo().equals("")){
+            if(!klient.getSlowo().isBlank() && klient.getPlayerID() != klient.getOtrzymanyNR()){
                 chatPole.append(gra.getGracze()[klient.getOtrzymanyNR()].getNazwaGracza() + ": " + klient.getSlowo() + "\n");
+                klient.setOtrzymanyNR((short) -1);
                 klient.setSlowo("");
             }
 

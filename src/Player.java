@@ -52,7 +52,7 @@ public class Player {//haslo to ostatni oktet adresu ip
         this.currentY = currentY;
     }
 
-    public synchronized String getSlowo() {
+    public String getSlowo() {
         return slowo;
     }
 
@@ -68,6 +68,10 @@ public class Player {//haslo to ostatni oktet adresu ip
 
     public int getSeed() {
         return seed;
+    }
+
+    public void setOtrzymanyNR(short otrzymanyNR) {
+        this.otrzymanyNR = otrzymanyNR;
     }
 
     public short getOtrzymanyNR() {
@@ -169,7 +173,6 @@ public class Player {//haslo to ostatni oktet adresu ip
                     slowo = daneIN.readUTF();
                 }
                 if (flaga == 3) {
-
                     imiona[0] = daneIN.readUTF();
                     imiona[1] = daneIN.readUTF();
                 }
