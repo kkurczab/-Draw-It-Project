@@ -160,7 +160,7 @@ public class GraGUI extends Thread{
                 String wiadomosc = chatWpisz.getText();
                 if(!wiadomosc.isBlank()) {
                     klient.setSlowo(chatWpisz.getText());
-                    chatPole.append(gra.getGracze()[klient.getPlayerID()].getNazwaGracza() + ": " + chatWpisz.getText() + "\n");
+
                     klient.wyslijSlowo();
                     chatWpisz.setText("");
                     klient.setSlowo("");
@@ -328,9 +328,15 @@ public class GraGUI extends Thread{
                 currentY = klient.getCurrentY();
                 updateCanvas();
             }
-            if(!klient.getSlowo().isBlank() && klient.getPlayerID() != klient.getOtrzymanyNR()){
-                chatPole.append(gra.getGracze()[klient.getOtrzymanyNR()].getNazwaGracza() + ": " + klient.getSlowo() + "\n");
-                klient.setSlowo("");
+            if(!klient.getSlowo().isBlank()){
+                if(klient.getPlayerID() != klient.getOtrzymanyNR()) {
+                    chatPole.append(gra.getGracze()[klient.getOtrzymanyNR()].getNazwaGracza() + ": " + klient.getSlowo() + "\n");
+                    klient.setSlowo("");
+                }
+                else{
+                    chatPole.append(gra.getGracze()[klient.getPlayerID()].getNazwaGracza() + ": " + klient.getSlowo() + "\n");
+                    klient.setSlowo("");
+                }
             }
         }
     public Player getKlient() {

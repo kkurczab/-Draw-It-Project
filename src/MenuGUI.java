@@ -25,7 +25,7 @@ public class MenuGUI extends JDialog{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
 
-                    if(graGUI.getCzyKoniecGry() != false){
+                    if(graGUI.getCzyKoniecGry()){
                         KoniecGry koniecGry = new KoniecGry(graGUI);
                         koniecGry.setVisible(true);
                     }
@@ -49,6 +49,8 @@ public class MenuGUI extends JDialog{
                         graGUI.getKlient().wyslijImie();
                     }
                     dispose();
+                    WaitingGUI waitingGUI = new WaitingGUI(graGUI);
+                    waitingGUI.setVisible(true);
 
             }
         });
@@ -63,11 +65,12 @@ public class MenuGUI extends JDialog{
                         graGUI.start();
                     }
                     Thread.sleep(1000);
-
                     graGUI.getGra().getGracze()[graGUI.getKlient().getPlayerID()].setNazwaGracza(imie1.getText());
                     graGUI.getKlient().setImie(imie1.getText(),graGUI.getKlient().getPlayerID());
                     graGUI.getKlient().wyslijImie();
                     dispose();
+                    WaitingGUI waitingGUI = new WaitingGUI(graGUI);
+                    waitingGUI.setVisible(true);
 
 
                 }catch (IllegalArgumentException | InterruptedException ee){

@@ -24,18 +24,15 @@ public class Server {
 
    ///////////////////Metody
     public void przyjeciePolaczenia(){
-        System.out.println("Oczekiwanie na graczy");
         try {
             while (nrGracza < maxLiczbaGraczy) {
                 Socket socket = socketSerwer.accept();//accept zwraca socket,(kliencka wersja serwer socketa)
-                System.out.println("Gracz nr " + nrGracza + " polaczyl sie");
                 PolaczenieDoKlienta polaczenieDoKlienta = new PolaczenieDoKlienta(socket,nrGracza);
                 gracze[nrGracza] = polaczenieDoKlienta;
                 Thread t = new Thread(polaczenieDoKlienta);
                 t.start();
                 nrGracza++;
             }
-            System.out.println("Maksymalna liczb garczy osiganieta!!!");
         }catch(IOException e){
             System.out.println("przechwycono wyjątek z podlaczania klienta ");
         }
@@ -51,7 +48,6 @@ public class Server {
         Gra gra = new Gra(maxLiczbaGraczy);
         nrGraczaUWladzy =(short)gra.losujNrGracza();//trzeba przeniesc do zmiany tury czy czegos
         gracze = new PolaczenieDoKlienta[maxLiczbaGraczy];
-        System.out.print("Serwer ruszyl!!!");
         nrGracza = 0;
         try{
             socketSerwer = new ServerSocket(51724);

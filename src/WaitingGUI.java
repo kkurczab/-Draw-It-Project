@@ -4,25 +4,19 @@ import java.awt.event.ActionListener;
 
 public class WaitingGUI extends JDialog{
     private JPanel P;
-    private JFormattedTextField liczbaObecnychGraczy;
+    private JTextField hasloTF;
+    private JButton zamknijButton;
 
     public WaitingGUI(GraGUI graGUI){
         setContentPane(P);
-        setModal(true);
-        setUndecorated(true);
+        setLocationRelativeTo(null);
+        getRootPane().setDefaultButton(zamknijButton);
         pack();
-        liczbaObecnychGraczy.addActionListener(new ActionListener() { //tutaj listener na liczbe graczy, ktorzy juz dolaczyli (zaczynam od 1)
+        hasloTF.setText(Byte.toString(graGUI.getKlient().getOstatniOktet()));
+        zamknijButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
-                int k = 1;
-                //...
-                //moge to napisac jutro
-                k=2;
-                if(k == 2){
-                    dispose();
-                   // NowaTura nowaTura = new NowaTura(graGUI);
-                   // nowaTura.setVisible(true);
-                }
+                dispose();
             }
         });
     }

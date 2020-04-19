@@ -23,7 +23,9 @@ public class Player {//haslo to ostatni oktet adresu ip
         else
             throw new IllegalArgumentException();
     }
-
+    public byte getOstatniOktet(){
+        return this.oktetyIP[3];
+    }
     public short getNrGraczaUWladzy() {
         return nrGraczaUWladzy;
     }
@@ -68,10 +70,6 @@ public class Player {//haslo to ostatni oktet adresu ip
 
     public int getSeed() {
         return seed;
-    }
-
-    public void setOtrzymanyNR(short otrzymanyNR) {
-        this.otrzymanyNR = otrzymanyNR;
     }
 
     public short getOtrzymanyNR() {
@@ -191,15 +189,12 @@ public class Player {//haslo to ostatni oktet adresu ip
         }
 
         public PolaczenieOdKlienta() {
-
-            System.out.println("Klient!!!!");
             try {
-                socket = new Socket(InetAddress.getByAddress(new byte[]{(byte) oktetyIP[0], (byte) oktetyIP[1], (byte) oktetyIP[2], (byte) oktetyIP[3]}), 51724);
+                socket = new Socket(InetAddress.getByAddress(new byte[]{ oktetyIP[0],oktetyIP[1], oktetyIP[2], oktetyIP[3]}), 51724);
                 daneIN = new DataInputStream(socket.getInputStream());
                 daneOUT = new DataOutputStream(socket.getOutputStream());
                 playerID = daneIN.readShort();
                 seed = daneIN.readInt();
-                System.out.println("Moj numer gracza to: " + playerID);
                 this.start();
 
             } catch (IOException e) {
