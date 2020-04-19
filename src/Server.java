@@ -4,18 +4,17 @@ import java.net.*;
 public class Server {
     private Gra gra;
     private ServerSocket socketSerwer;
-    private short liczbaGraczy;
+    private short nrGracza;
     private PolaczenieDoKlienta[] gracze;
     private int maxLiczbaGraczy;
     private short nrGraczaUWladzy;
     private byte kolor;
-
     private short currentX;
     private short currentY;
     private byte kolorBuff;
     private short currentXBuff;
     private short currentYBuff;
-    private byte flaga;//1=kolor, 3 = oldx, 4 = oldy, 5 = currx, 6 = curry
+    private byte flaga;//1=kolor, 2 = slowo, 5 = currx, 6 = curry
     private String slowo = "";
     private String slowoBuff = "";
     private short otrzymanyNR;
@@ -26,14 +25,14 @@ public class Server {
     public void przyjeciePolaczenia(){
         System.out.println("Oczekiwanie na graczy");
         try {
-            while (liczbaGraczy < maxLiczbaGraczy) {//warunke dodatkowy jesli chcemy zeby wczesniej zakonczyl oczekiwanie na graczy
+            while (nrGracza < maxLiczbaGraczy) {
                 Socket socket = socketSerwer.accept();//accept zwraca socket,(kliencka wersja serwer socketa)
-                System.out.println("Gracz nr " + liczbaGraczy + " polaczyl sie");
-                PolaczenieDoKlienta polaczenieDoKlienta = new PolaczenieDoKlienta(socket,liczbaGraczy);
-                gracze[liczbaGraczy] = polaczenieDoKlienta;
+                System.out.println("Gracz nr " + nrGracza + " polaczyl sie");
+                PolaczenieDoKlienta polaczenieDoKlienta = new PolaczenieDoKlienta(socket,nrGracza);
+                gracze[nrGracza] = polaczenieDoKlienta;
                 Thread t = new Thread(polaczenieDoKlienta);
                 t.start();
-                liczbaGraczy++;
+                nrGracza++;
             }
             System.out.println("Maksymalna liczb garczy osiganieta!!!");
         }catch(IOException e){
@@ -48,7 +47,7 @@ public class Server {
         nrGraczaUWladzy =(short)gra.losujNrGracza();//trzeba przeniesc do zmiany tury czy czegos
         gracze = new PolaczenieDoKlienta[maxLiczbaGraczy];
         System.out.print("Serwer ruszyl!!!");
-        liczbaGraczy = 0;
+        nrGracza = 0;
         try{
             socketSerwer = new ServerSocket(51724);
 
@@ -78,11 +77,11 @@ public class Server {
 
         }
         public void run(){
+
             new Thread(() -> {
                 while (true) {
                     Thread.yield();
                     try {
-                        //System.out.println("wysylam kolor teraz");
                         if (!slowo.equals(slowoBuff)) {
                             flaga = 2;
                             daneOUT.writeByte(flaga);
@@ -99,8 +98,6 @@ public class Server {
                                 daneOUT.writeByte(kolor);
                                 daneOUT.flush();
                             }
-
-
                             if (currentX != currentXBuff) {
                                 currentX = currentXBuff;
                                 flaga = 5;
@@ -155,11 +152,5 @@ public class Server {
         }
     }
 
-    /////////////////////////Main
-    public static void main(String[] args) throws UnknownHostException {
-        System.out.print(InetAddress.getLocalHost());
-        Server serwer = new Server();
-        serwer.przyjeciePolaczenia();
 
-    }
 }

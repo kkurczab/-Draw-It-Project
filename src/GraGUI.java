@@ -39,7 +39,7 @@ public class GraGUI extends Thread{
 
     public Timer timer;
     public boolean czyKoniecGry; //0-nie, 1-tak
-    private short currentX, currentY, oldX, oldY;
+    private short currentX, currentY;
     private BufferedImage canvas;
     private int value;//grubosc pedzla do zmiany, tak do 50 grubosc, jakis slider bylby spoko, zmiana value zmiana geubosci1do1
     private Byte color;//kazdy przycik to cyferka - patrz getColor()//mozna mniej kolorow jak cos, przycisk gumki zmiana koloru na bialo XD
@@ -185,7 +185,6 @@ public class GraGUI extends Thread{
                     klient.wyslijSlowo();
                     chatWpisz.setText("");
                     klient.setSlowo("");
-                   System.out.println(klient.getSlowo()+"x");
                 }
             }
         });
@@ -245,9 +244,8 @@ public class GraGUI extends Thread{
         Arrays.sort(ranking, Collections.reverseOrder()); //od najw. do najm. wartosci {100, 40, 20, 8, ... itd.}
         punkty1.setValue(ranking[0]);
         punkty2.setValue(ranking[1]);
-        //punkty3.setValue(ranking[2]);
-        //punkty4.setValue(ranking[3]);
-        //punkty5.setValue(ranking[4]);
+        punkty3.setValue(ranking[2]);
+
 
         int k = 1;
         Gracz[] listaGraczy = gra.getGracze();
