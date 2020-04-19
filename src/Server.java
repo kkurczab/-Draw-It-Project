@@ -9,13 +9,10 @@ public class Server {
     private int maxLiczbaGraczy;
     private short nrGraczaUWladzy;
     private byte kolor;
-    private short oldX;
-    private short oldY;
+
     private short currentX;
     private short currentY;
     private byte kolorBuff;
-    private short oldXBuff;
-    private short oldYBuff;
     private short currentXBuff;
     private short currentYBuff;
     private byte flaga;//1=kolor, 3 = oldx, 4 = oldy, 5 = currx, 6 = curry
@@ -103,20 +100,7 @@ public class Server {
                                 daneOUT.flush();
                             }
 
-                            if (oldX != oldXBuff) {
-                                oldX = oldXBuff;
-                                flaga = 3;
-                                daneOUT.writeByte(flaga);
-                                daneOUT.writeShort(oldX);
-                                daneOUT.flush();
-                            }
-                            if (oldY != oldYBuff) {
-                                oldY = oldYBuff;
-                                flaga = 4;
-                                daneOUT.writeByte(flaga);
-                                daneOUT.writeShort(oldY);
-                                daneOUT.flush();
-                            }
+
                             if (currentX != currentXBuff) {
                                 currentX = currentXBuff;
                                 flaga = 5;
@@ -153,10 +137,6 @@ public class Server {
                     if(nrGraczaUWladzy == playerID){
                         if(flaga == 1)
                             kolorBuff = daneIN.readByte();
-                        if(flaga == 3)
-                            oldXBuff = daneIN.readShort();
-                        if(flaga == 4)
-                            oldYBuff = daneIN.readShort();
                         if(flaga == 5)
                             currentXBuff = daneIN.readShort();
                         if(flaga == 6)

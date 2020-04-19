@@ -82,12 +82,12 @@ public class GraGUI extends Thread{
                     klient.wyslijCurrentX();
                     klient.wyslijCurrentY();
                     updateCanvas();
-                    oldX = currentX;
-                    oldY = currentY;
-                    klient.setOldX(oldX);
-                    klient.setOldY(oldY);
-                    klient.wyslijOldX();
-                    klient.wyslijOldY();
+                   // oldX = currentX;
+                   // oldY = currentY;
+                   // klient.setOldX(oldX);
+                   // klient.setOldY(oldY);
+                   // klient.wyslijOldX();
+                    //klient.wyslijOldY();
                 }
             }
         });
@@ -97,18 +97,18 @@ public class GraGUI extends Thread{
             @Override
             public void mousePressed(MouseEvent e) {
                 if (kuleczkaWladzy) {
-                    oldX = (short)e.getX();
-                    oldY = (short)e.getY();
-                    currentX = oldX;
-                    currentY = oldY;
+                    currentX = (short)e.getX();
+                    currentY = (short)e.getY();;
+                    //currentX = oldX;
+                    //currentY = oldY;
                     klient.setCurrentX(currentX);
                     klient.setCurrentY(currentY);
-                    klient.setOldX(oldX);
-                    klient.setOldY(oldY);
+                    //klient.setOldX(oldX);
+                    //klient.setOldY(oldY);
                     klient.wyslijCurrentX();
                     klient.wyslijCurrentY();
-                    klient.wyslijOldX();
-                    klient.wyslijOldY();
+                    //klient.wyslijOldX();
+                    //klient.wyslijOldY();
                     updateCanvas();
                 }
             }
@@ -297,10 +297,10 @@ public class GraGUI extends Thread{
     public void updateCanvas() {
         Graphics2D g2d = canvas.createGraphics();
         g2d.setPaint(getColor());
-        g2d.fillOval(oldX - (value / 2), oldY - (value / 2), value, value);
-        g2d.setStroke(new BasicStroke((float) value, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        g2d.drawLine(oldX, oldY, currentX, currentY);
-        g2d.setStroke(new BasicStroke(1.0f));
+        g2d.fillOval(currentX - (value / 2), currentY - (value / 2), value, value);
+        //g2d.setStroke(new BasicStroke((float) value, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+        //g2d.drawLine(oldX, oldY, currentX, currentY);
+        //g2d.setStroke(new BasicStroke(1.0f));
         planszaRysunku.repaint();
     }
     private Color getColor() {
@@ -392,8 +392,8 @@ public class GraGUI extends Thread{
 
                 kuleczkaWladzy = false;
                 color = klient.getKolor();
-                oldX = klient.getOldX();
-                oldY = klient.getOldY();
+               // oldX = klient.getOldX();
+                //oldY = klient.getOldY();
                 currentX = klient.getCurrentX();
                 currentY = klient.getCurrentY();
                 updateCanvas();

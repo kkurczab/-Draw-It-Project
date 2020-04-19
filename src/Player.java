@@ -39,21 +39,6 @@ public class Player {//haslo to ostatni oktet adresu ip
         this.kolor = kolor;
     }
 
-    public short getOldX() {
-        return oldX;
-    }
-
-    public void setOldX(short oldX) {
-        this.oldX = oldX;
-    }
-
-    public short getOldY() {
-        return oldY;
-    }
-
-    public void setOldY(short oldY) {
-        this.oldY = oldY;
-    }
 
     public short getCurrentX() {
         return currentX;
@@ -121,22 +106,7 @@ public class Player {//haslo to ostatni oktet adresu ip
         }
     }
 
-    public void wyslijOldX() {
-        try{
-        flaga = 3;
-        polaczenieOdKlienta.daneOUT.writeByte(flaga);
-        polaczenieOdKlienta. daneOUT.writeShort(oldX);
-        polaczenieOdKlienta.daneOUT.flush();
-        }catch (IOException e){}
-    }
-    public void wyslijOldY() {
-        try{
-        flaga = 4;
-        polaczenieOdKlienta.daneOUT.writeByte(flaga);
-        polaczenieOdKlienta.daneOUT.writeShort(oldY);
-        polaczenieOdKlienta.daneOUT.flush();
-        }catch (IOException e){}
-    }
+
     public void wyslijCurrentX() {
         try{
         flaga = 5;
@@ -180,10 +150,6 @@ public class Player {//haslo to ostatni oktet adresu ip
                        // System.out.println("Przegryw" + playerID);
                         if(flaga == 1)
                             kolor = daneIN.readByte();
-                        if(flaga == 3)
-                            oldX = daneIN.readShort();
-                        if(flaga == 4)
-                            oldY = daneIN.readShort();
                         if(flaga == 5)
                             currentX = daneIN.readShort();
                         if(flaga == 6)
