@@ -56,9 +56,6 @@ public class Server {
             System.out.print("przechwycono wyjątek z kontrukcji socketa");
         }
     }
-    private void wyslijDaneServ(){
-
-    }
 
     ////Klasy
 
