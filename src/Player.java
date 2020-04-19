@@ -116,7 +116,7 @@ public class Player {//haslo to ostatni oktet adresu ip
             polaczenieOdKlienta.daneOUT.writeUTF(slowo);
             polaczenieOdKlienta.daneOUT.flush();
         } catch (IOException e) {
-            System.out.println("zle sie dzieje");
+            System.out.println("zle sie dzieje w slowie");
         }
     }
     public void wyslijImie() {
@@ -127,7 +127,7 @@ public class Player {//haslo to ostatni oktet adresu ip
             polaczenieOdKlienta.daneOUT.writeUTF(imiona[playerID]);
             polaczenieOdKlienta.daneOUT.flush();
         } catch (IOException e) {
-            System.out.println("zle sie dzieje");
+            System.out.println("zle sie dzieje w imionach");
         }
     }
 

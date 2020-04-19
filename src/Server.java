@@ -60,6 +60,9 @@ public class Server {
             System.out.print("przechwycono wyjątek z kontrukcji socketa");
         }
     }
+    private void wyslijDaneServ(){
+
+    }
 
     ////Klasy
 
@@ -82,57 +85,81 @@ public class Server {
             }
 
         }
+        private void odczytajDaneServ() throws IOException{
+            flaga = daneIN.readByte();
+            if(nrGraczaUWladzy == playerID){
+                if(flaga == 1)
+                    kolorBuff = daneIN.readByte();
+                if(flaga == 5)
+                    currentXBuff = daneIN.readShort();
+                if(flaga == 6)
+                    currentYBuff = daneIN.readShort();
+            }
+            if(flaga == 2) {
+                otrzymanyNR = daneIN.readShort();
+                slowo = daneIN.readUTF();
+            }
+            if(flaga == 3) {
+                otrzymanyNR = daneIN.readShort();
+                imiona[otrzymanyNR] = daneIN.readUTF();
+                flagaImie = true;
+
+            }
+        }
+        private void wyslijDaneServ() throws IOException {
+            if (!slowo.equals("") && otrzymanyNR != playerID) {
+                flaga = 2;
+                daneOUT.writeByte(flaga);
+                daneOUT.writeShort(otrzymanyNR);
+                daneOUT.writeUTF(slowo);
+                daneOUT.flush();
+                slowo = "";
+            }
+            if (flagaImie) {
+                flaga = 3;
+                daneOUT.writeByte(flaga);
+                daneOUT.writeUTF(imiona[0]);
+                daneOUT.writeUTF(imiona[1]);
+                daneOUT.flush();
+                flagaImie = false;
+            }
+            if (nrGraczaUWladzy != playerID) {
+                if (kolor != kolorBuff) {
+                    kolor = kolorBuff;
+                    flaga = 1;
+                    daneOUT.writeByte(flaga);
+                    daneOUT.writeByte(kolor);
+                    daneOUT.flush();
+                }
+                if (currentX != currentXBuff) {
+                    currentX = currentXBuff;
+                    flaga = 5;
+                    daneOUT.writeByte(flaga);
+                    daneOUT.writeShort(currentX);
+                    daneOUT.flush();
+                }
+                if (currentY != currentYBuff) {
+                    currentY = currentYBuff;
+                    flaga = 6;
+                    daneOUT.writeByte(flaga);
+                    daneOUT.writeShort(currentY);
+                    daneOUT.flush();
+                }
+            }
+        }
+
         public void run(){
 
             new Thread(() -> {
                 while (true) {
                     Thread.yield();
                     try {
-                        if (!slowo.equals("") && otrzymanyNR != playerID) {
-                            flaga = 2;
-                            daneOUT.writeByte(flaga);
-                            daneOUT.writeShort(otrzymanyNR);
-                            daneOUT.writeUTF(slowo);
-                            daneOUT.flush();
-                            slowo = "";
-                        }
-                        if (flagaImie) {
-                            flaga = 3;
-                            daneOUT.writeByte(flaga);
-                            daneOUT.writeUTF(imiona[0]);
-                            daneOUT.writeUTF(imiona[1]);
-                            daneOUT.flush();
-                            flagaImie = false;
-                        }
-                        if (nrGraczaUWladzy != playerID) {
-                            if (kolor != kolorBuff) {
-                                kolor = kolorBuff;
-                                flaga = 1;
-                                daneOUT.writeByte(flaga);
-                                daneOUT.writeByte(kolor);
-                                daneOUT.flush();
-                            }
-                            if (currentX != currentXBuff) {
-                                currentX = currentXBuff;
-                                flaga = 5;
-                                daneOUT.writeByte(flaga);
-                                daneOUT.writeShort(currentX);
-                                daneOUT.flush();
-                            }
-                            if (currentY != currentYBuff) {
-                                currentY = currentYBuff;
-                                flaga = 6;
-                                daneOUT.writeByte(flaga);
-                                daneOUT.writeShort(currentY);
-                                daneOUT.flush();
-                            }
-                        }
+                        wyslijDaneServ();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
             }).start();
-
 
             try{
                 daneOUT.writeShort(playerID);
@@ -143,34 +170,11 @@ public class Server {
                 daneOUT.flush();
 
                 while(true){
-                    //Thread.yield();
-                    flaga = daneIN.readByte();
-                    if(nrGraczaUWladzy == playerID){
-                        if(flaga == 1)
-                            kolorBuff = daneIN.readByte();
-                        if(flaga == 5)
-                            currentXBuff = daneIN.readShort();
-                        if(flaga == 6)
-                            currentYBuff = daneIN.readShort();
-                    }
-                    if(flaga == 2) {
-                        otrzymanyNR = daneIN.readShort();
-                        slowo = daneIN.readUTF();
-                    }
-                    if(flaga == 3) {
-                        otrzymanyNR = daneIN.readShort();
-                        imiona[otrzymanyNR] = daneIN.readUTF();
-                        flagaImie = true;
-
-                    }
-
+                    odczytajDaneServ();
                 }
-
             }catch (IOException e){
 
             }
         }
     }
-
-
 }

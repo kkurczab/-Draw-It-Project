@@ -52,12 +52,12 @@ public class GraGUI extends Thread{
         canvas = new BufferedImage(960, 1080, BufferedImage.TYPE_INT_RGB);
         gra = new Gra(liczbGraczy);
         klient = new Player();
-        MenuGUI menuGUI = new MenuGUI(GraGUI.this);
+        MenuGUI menuGUI = new MenuGUI(GraGUI.this); //okno startowe
         menuGUI.setVisible(true);
 
         //oknoGry.setPreferredSize(new Dimension(400, 600));
         value = 7;
-        color = 3;//bialy
+        color = 3;//bialy(getColor())
         colorScreen();
         planszaRysunku.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
@@ -158,7 +158,7 @@ public class GraGUI extends Thread{
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 String wiadomosc = chatWpisz.getText();
-                if(!wiadomosc.equals("")) {
+                if(!wiadomosc.isBlank()) {
                     klient.setSlowo(chatWpisz.getText());
                     chatPole.append(gra.getGracze()[klient.getPlayerID()].getNazwaGracza() + ": " + chatWpisz.getText() + "\n");
                     klient.wyslijSlowo();
@@ -167,22 +167,8 @@ public class GraGUI extends Thread{
                 }
             }
         });
-        //okno startowe
-
-
-
-        //Pasek czasu------------------------------------------------------------------------
-
-        //JOptionPane.showMessageDialog(null, progressBar);
-        //Pasek czasu------------------------------------------------------------------------
 
     }
-
-
-    public void czyZgadles(int x, GraGUI graGUI){
-        //if(x == )
-    }
-
 
     public static int getMinValue(Integer[] numbers){
         int minValue = numbers[0];
@@ -194,7 +180,7 @@ public class GraGUI extends Thread{
         return minValue;
     }
 
-    public void refresh() {//metoda oswiezajaca GUI
+    public void refresh() {//metoda odswiezajaca GUI
         //ustawienie rankingu graczy
         Integer[] ranking = new Integer[liczbGraczy];
         for(int i = 0; i < liczbGraczy; i++){
@@ -203,7 +189,6 @@ public class GraGUI extends Thread{
         Arrays.sort(ranking, Collections.reverseOrder()); //od najw. do najm. wartosci {100, 40, 20, 8, ... itd.}
         punkty1.setValue(ranking[0]);
         punkty2.setValue(ranking[1]);
-       // punkty3.setValue(ranking[2]);
 
 
         int k = 1;
@@ -218,10 +203,7 @@ public class GraGUI extends Thread{
                  }if(k==1){
                      imie2.setText(listaGraczy[i].getNazwaGracza());
                      k++;
-                 }/*if(k==1){
-                     imie3.setText(listaGraczy[i].getNazwaGracza());
-                     k++;
-                 }*/
+                 }
                 x = Arrays.copyOf(x, x.length - 1); //usuwa ostatni element z "x"
             }
         }
@@ -232,16 +214,7 @@ public class GraGUI extends Thread{
     public boolean getCzyKoniecGry(){ return czyKoniecGry;}
 
     private void createUIComponents() {
-
-            planszaRysunku = new JPanel(){
-                protected void paintComponent(Graphics g) {
-                    super.paintComponent(g);
-                    Graphics2D g2 = (Graphics2D) g;
-                    g2.drawImage(canvas, 0, 0, null);
-                }
-
-            };
-
+        //Pasek czasu------------------------------------------------------------------------
         progressBar = new JProgressBar(JProgressBar.VERTICAL, 0, 10);
         progressBar.setValue(10);
         ActionListener listener = new ActionListener() {
@@ -257,14 +230,24 @@ public class GraGUI extends Thread{
             }
         };
         timer = new Timer(1000, listener);
+        //Rysowanie ekranu------------------------------------------------------------------------
+        planszaRysunku = new JPanel(){
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g;
+                g2.drawImage(canvas, 0, 0, null);
+            }
 
+        };
     }
+
     public void updateCanvas() {
         Graphics2D g2d = canvas.createGraphics();
         g2d.setPaint(getColor());
         g2d.fillOval(currentX - (value / 2), currentY - (value / 2), value, value);
         planszaRysunku.repaint();
     }
+
     private Color getColor() {
         Color c = null;
         switch (color) {
@@ -289,13 +272,12 @@ public class GraGUI extends Thread{
         }
         return c;
     }
-    private void colorScreen() {//przycisk kolorujacy caly ekran(potencajlna funcja), ustawaijac bialy kolor sluzy do czyszczenia
+    private void colorScreen() {//caly ekran na jeden kolor
         Graphics g = canvas.getGraphics();
         g.setColor( getColor());
         g.fillRect(0,0,canvas.getWidth(),canvas.getHeight());
         planszaRysunku.repaint();
     }
-
 
     public void stworzGre(){
         serwer = new Server();
@@ -306,17 +288,6 @@ public class GraGUI extends Thread{
         klient.polaczZSerwerem();
     }
 
-
-
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("GraGUI");
-        frame.setContentPane(new GraGUI().oknoGry);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.pack();
-        frame.setVisible(true);
-
-
-    }
     public void run(){
         dolaczDoGry();
         gra.setSeed(klient.getSeed());
@@ -326,26 +297,13 @@ public class GraGUI extends Thread{
             e.printStackTrace();
         }if(klient.getNrGraczaUWladzy()==klient.getPlayerID())
             haslo.setText(gra.getHaslo());
-
-
-
             timer.start();
         while (true){
-            //imie1.setText(gra.getGracze()[0].getNazwaGracza());
-            //imie2.setText(gra.getGracze()[1].getNazwaGracza());
             refresh();
-
             synchronizeValues();
-
-
         }
     }
-
-    public Player getKlient() {
-        return klient;
-    }
-
-
+        //synchornizacja GUI z klientem
         private void synchronizeValues(){
             if(gra.getGracze()[0].getNazwaGracza().equals("")){
                 try {
@@ -364,21 +322,25 @@ public class GraGUI extends Thread{
                 kuleczkaWladzy = true;
             }
             else{
-
                 kuleczkaWladzy = false;
                 color = klient.getKolor();
                 currentX = klient.getCurrentX();
                 currentY = klient.getCurrentY();
                 updateCanvas();
-
             }
             if(!klient.getSlowo().isBlank() && klient.getPlayerID() != klient.getOtrzymanyNR()){
                 chatPole.append(gra.getGracze()[klient.getOtrzymanyNR()].getNazwaGracza() + ": " + klient.getSlowo() + "\n");
-                klient.setOtrzymanyNR((short) -1);
                 klient.setSlowo("");
             }
-
-
         }
-
+    public Player getKlient() {
+        return klient;
+    }
+    public static void main(String[] args) {
+        JFrame frame = new JFrame("GraGUI");
+        frame.setContentPane(new GraGUI().oknoGry);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.pack();
+        frame.setVisible(true);
+    }
 }
