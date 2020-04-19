@@ -6,14 +6,15 @@ public class Player {//haslo to ostatni oktet adresu ip
     private byte[] oktetyIP;
     private PolaczenieOdKlienta polaczenieOdKlienta;
     private short playerID = -5;
-    private int[] pozostaliGracze;
     private short nrGraczaUWladzy = -1;
     private byte kolor = 3;
     private short currentX;
     private short currentY;
     private byte flaga;
-    String slowo;
+    private String slowo="";
+    private String imiona[];
     private short otrzymanyNR;
+    private int seed;
 
     /////////////Metody
     public void setOktet4(int oktet4) throws IllegalArgumentException {
@@ -51,12 +52,22 @@ public class Player {//haslo to ostatni oktet adresu ip
         this.currentY = currentY;
     }
 
-    public String getSlowo() {
+    public synchronized String getSlowo() {
         return slowo;
     }
 
     public void setSlowo(String slowo) {
         this.slowo = slowo;
+    }
+    public void setImie(String imie,int playerID) {
+        this.imiona[playerID] = imie;
+    }
+    public String[] getImiona() {
+        return imiona;
+    }
+
+    public int getSeed() {
+        return seed;
     }
 
     public short getOtrzymanyNR() {
@@ -65,13 +76,12 @@ public class Player {//haslo to ostatni oktet adresu ip
 
     //////////////Kontruktor
     public Player() {
+        imiona = new String[]{"",""};
         try {
             oktetyIP = InetAddress.getLocalHost().getAddress();
         } catch (UnknownHostException e) {
             System.out.println("wyjakte IP");
         }
-
-        //playerID = -1;//serwer nie wstal
 
     }
 
@@ -100,6 +110,17 @@ public class Player {//haslo to ostatni oktet adresu ip
             polaczenieOdKlienta.daneOUT.writeByte(flaga);
             polaczenieOdKlienta.daneOUT.writeShort(playerID);
             polaczenieOdKlienta.daneOUT.writeUTF(slowo);
+            polaczenieOdKlienta.daneOUT.flush();
+        } catch (IOException e) {
+            System.out.println("zle sie dzieje");
+        }
+    }
+    public void wyslijImie() {
+        try {
+            flaga = 3;
+            polaczenieOdKlienta.daneOUT.writeByte(flaga);
+            polaczenieOdKlienta.daneOUT.writeShort(playerID);
+            polaczenieOdKlienta.daneOUT.writeUTF(imiona[playerID]);
             polaczenieOdKlienta.daneOUT.flush();
         } catch (IOException e) {
             System.out.println("zle sie dzieje");
@@ -136,17 +157,21 @@ public class Player {//haslo to ostatni oktet adresu ip
         public void run() {
 
             while (true) {
-                //Thread.yield();
-                synchroDanych();
+                odbiorDanych();
             }
         }
 
-        public void synchroDanych() {
+        public void odbiorDanych() {
             try {
                 flaga = daneIN.readByte();
                 if (flaga == 2) {
                     otrzymanyNR = daneIN.readShort();
                     slowo = daneIN.readUTF();
+                }
+                if (flaga == 3) {
+
+                    imiona[0] = daneIN.readUTF();
+                    imiona[1] = daneIN.readUTF();
                 }
                 if (flaga == 0)
                     nrGraczaUWladzy = daneIN.readShort();
@@ -170,6 +195,7 @@ public class Player {//haslo to ostatni oktet adresu ip
                 daneIN = new DataInputStream(socket.getInputStream());
                 daneOUT = new DataOutputStream(socket.getOutputStream());
                 playerID = daneIN.readShort();
+                seed = daneIN.readInt();
                 System.out.println("Moj numer gracza to: " + playerID);
                 this.start();
 

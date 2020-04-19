@@ -33,8 +33,7 @@ public class MenuGUI extends JDialog{
                         if(graGUI.getKlient().getPlayerID() == -5) {//brak wczesniejszych udanych polaczen z serwerem
                             new Thread(() -> graGUI.stworzGre()).start();
                             graGUI.start();
-                            //WaitingGUI waitingGUI = new WaitingGUI(graGUI);
-                            //waitingGUI.setVisible(true);
+
                         }
                         try {
                             Thread.sleep(1000);
@@ -46,8 +45,8 @@ public class MenuGUI extends JDialog{
                         }catch (IllegalArgumentException ee){
                             JOptionPane.showMessageDialog(null, "Podaj imię!");
                         }
-                        graGUI.getKlient().setSlowo(imie1.getText());
-                        graGUI.getKlient().wyslijSlowo();
+                        graGUI.getKlient().setImie(imie1.getText(),graGUI.getKlient().getPlayerID());
+                        graGUI.getKlient().wyslijImie();
                     }
                     dispose();
 
@@ -66,8 +65,8 @@ public class MenuGUI extends JDialog{
                     Thread.sleep(1000);
 
                     graGUI.getGra().getGracze()[graGUI.getKlient().getPlayerID()].setNazwaGracza(imie1.getText());
-                    graGUI.getKlient().setSlowo(imie1.getText());
-                    graGUI.getKlient().wyslijSlowo();
+                    graGUI.getKlient().setImie(imie1.getText(),graGUI.getKlient().getPlayerID());
+                    graGUI.getKlient().wyslijImie();
                     dispose();
 
 

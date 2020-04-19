@@ -62,7 +62,9 @@
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <editable value="false"/>
+                    </properties>
                   </component>
                   <component id="fb2d6" class="javax.swing.JFormattedTextField" binding="imie2">
                     <constraints>
@@ -70,7 +72,9 @@
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <editable value="false"/>
+                    </properties>
                   </component>
                   <component id="84085" class="javax.swing.JFormattedTextField" binding="imie3">
                     <constraints>
@@ -79,6 +83,7 @@
                       </grid>
                     </constraints>
                     <properties>
+                      <editable value="false"/>
                       <text value=""/>
                     </properties>
                   </component>
@@ -88,7 +93,9 @@
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <editable value="false"/>
+                    </properties>
                   </component>
                   <component id="4fcb6" class="javax.swing.JFormattedTextField" binding="punkty2">
                     <constraints>
@@ -96,7 +103,9 @@
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <editable value="false"/>
+                    </properties>
                   </component>
                   <component id="5f0ef" class="javax.swing.JFormattedTextField" binding="punkty3">
                     <constraints>
@@ -104,7 +113,9 @@
                         <preferred-size width="150" height="-1"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <editable value="false"/>
+                    </properties>
                   </component>
                 </children>
               </grid>
@@ -122,7 +133,12 @@
                         <preferred-size width="150" height="50"/>
                       </grid>
                     </constraints>
-                    <properties/>
+                    <properties>
+                      <editable value="false"/>
+                      <enabled value="true"/>
+                      <lineWrap value="false"/>
+                      <wrapStyleWord value="false"/>
+                    </properties>
                   </component>
                 </children>
               </grid>
@@ -187,7 +203,9 @@
                 <preferred-size width="150" height="-1"/>
               </grid>
             </constraints>
-            <properties/>
+            <properties>
+              <editable value="false"/>
+            </properties>
           </component>
         </children>
       </grid>
@@ -251,12 +269,12 @@
               <text value="Niebieski"/>
             </properties>
           </component>
-          <component id="d0aa7" class="javax.swing.JButton" binding="wyczyscButton">
+          <component id="d0aa7" class="javax.swing.JButton" binding="gumkaButton">
             <constraints>
               <grid row="0" column="5" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <text value="Wyczyść"/>
+              <text value="Gumka"/>
             </properties>
           </component>
         </children>

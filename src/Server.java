@@ -1,8 +1,8 @@
 import java.io.*;
 import java.net.*;
+import java.util.Random;
 
 public class Server {
-    private Gra gra;
     private ServerSocket socketSerwer;
     private short nrGracza;
     private PolaczenieDoKlienta[] gracze;
@@ -16,9 +16,10 @@ public class Server {
     private short currentYBuff;
     private byte flaga;//1=kolor, 2 = slowo, 5 = currx, 6 = curry
     private String slowo = "";
-    private String slowoBuff = "";
-    private short otrzymanyNR;
     private String[] imiona;
+    private short otrzymanyNR;
+    private int seed;
+    private boolean flagaImie = false;
 
 
    ///////////////////Metody
@@ -43,7 +44,11 @@ public class Server {
     ///////////////////Konstruktor
     public Server(){
         this.maxLiczbaGraczy = 2;
-        gra = new Gra(maxLiczbaGraczy);
+        this.imiona = new String[maxLiczbaGraczy];
+        this.imiona[0] = "";
+        this.imiona[1] = "";
+        this.seed = new Random().nextInt();
+        Gra gra = new Gra(maxLiczbaGraczy);
         nrGraczaUWladzy =(short)gra.losujNrGracza();//trzeba przeniesc do zmiany tury czy czegos
         gracze = new PolaczenieDoKlienta[maxLiczbaGraczy];
         System.out.print("Serwer ruszyl!!!");
@@ -67,6 +72,7 @@ public class Server {
         public  PolaczenieDoKlienta(Socket s, short id) {
             socket = s;
             playerID = id;
+
             try {
                 daneIN = new DataInputStream(socket.getInputStream());
                 daneOUT = new DataOutputStream(socket.getOutputStream());
@@ -82,14 +88,22 @@ public class Server {
                 while (true) {
                     Thread.yield();
                     try {
-                        if (!slowo.equals(slowoBuff)) {
+                        if (!slowo.equals("")) {
                             flaga = 2;
                             daneOUT.writeByte(flaga);
                             daneOUT.writeShort(otrzymanyNR);
                             daneOUT.writeUTF(slowo);
                             daneOUT.flush();
-                            slowo = slowoBuff;
-                        }
+                            slowo = "";
+                        }synchronized (this){
+                        if (flagaImie) {
+                            flaga = 3;
+                            daneOUT.writeByte(flaga);
+                            daneOUT.writeUTF(imiona[0]);
+                            daneOUT.writeUTF(imiona[1]);
+                            daneOUT.flush();
+                            flagaImie = false;
+                        }}
                         if (nrGraczaUWladzy != playerID) {
                             if (kolor != kolorBuff) {
                                 kolor = kolorBuff;
@@ -122,14 +136,14 @@ public class Server {
 
             try{
                 daneOUT.writeShort(playerID);
+                daneOUT.writeInt(seed);
                 flaga = 0;
-                    daneOUT.writeByte(flaga);
-                    daneOUT.writeShort(nrGraczaUWladzy);
-                    daneOUT.flush();
-                    flaga = -1;
+                daneOUT.writeByte(flaga);
+                daneOUT.writeShort(nrGraczaUWladzy);
+                daneOUT.flush();
 
                 while(true){
-                    Thread.yield();
+                    //Thread.yield();
                     flaga = daneIN.readByte();
                     if(nrGraczaUWladzy == playerID){
                         if(flaga == 1)
@@ -142,6 +156,12 @@ public class Server {
                     if(flaga == 2) {
                         otrzymanyNR = daneIN.readShort();
                         slowo = daneIN.readUTF();
+                    }
+                    if(flaga == 3) {
+                        otrzymanyNR = daneIN.readShort();
+                        imiona[otrzymanyNR] = daneIN.readUTF();
+                        flagaImie = true;
+
                     }
 
                 }

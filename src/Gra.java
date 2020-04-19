@@ -1,11 +1,20 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.Scanner;
 
-public class Gra extends Thread{
+public class Gra{
 
     private int numerTury;
     private int maksymalnaLiczbaTur;
     private int liczbaGraczy;
-    public int wygrywaGracz;
+    private int wygrywaGracz;
+    private List <String> haslaTab;
+    private int seed;
+    private Random random;
+
 
 
     private Gracz[] gracze;
@@ -19,7 +28,10 @@ public class Gra extends Thread{
         for(int i = 0; i<liczbaGraczy;i++){
             gracze[i] = new Gracz(false);
         }
-        this.start();
+        odczytHasel();
+        random = new Random();
+
+
 
     }
 
@@ -40,5 +52,26 @@ public class Gra extends Thread{
         return gracze;
     }
 
+    public String getHaslo() { ;
+        return haslaTab.remove(random.nextInt(haslaTab.size()));
+    }
+
+    public void setSeed(int seed) {
+        this.seed = seed;
+        random.setSeed(seed);
+
+    }
+
+    private void odczytHasel()  {
+        try {
+            Scanner odczyt = new Scanner((new File("src\\Slowa_kluczowe.txt")));
+            haslaTab = new ArrayList<>();
+            while(odczyt.hasNextLine()) {
+            haslaTab.add(odczyt.nextLine());
+        }
+        }catch(FileNotFoundException e){
+            System.out.println("zle sie dzieje");
+        }
+    }
 
 }

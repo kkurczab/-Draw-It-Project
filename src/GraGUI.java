@@ -9,8 +9,6 @@ import java.util.Collections;
 
 public class GraGUI extends Thread{
 
-    private int weight;
-    private int height;
     private JPanel planszaRysunku;
     private JPanel górnaTablica;
     private JPanel chat;
@@ -32,7 +30,7 @@ public class GraGUI extends Thread{
     private JButton szaryButton;
     private JButton czerwonyButton;
     private JButton niebieskiButton;
-    private JButton wyczyscButton;
+    private JButton gumkaButton;
     private JFormattedTextField haslo;
     private JTextArea chatPole;
     private JButton wyslijButton;
@@ -41,10 +39,11 @@ public class GraGUI extends Thread{
     public boolean czyKoniecGry; //0-nie, 1-tak
     private short currentX, currentY;
     private BufferedImage canvas;
-    private int value;//grubosc pedzla do zmiany, tak do 50 grubosc, jakis slider bylby spoko, zmiana value zmiana geubosci1do1
-    private Byte color;//kazdy przycik to cyferka - patrz getColor()//mozna mniej kolorow jak cos, przycisk gumki zmiana koloru na bialo XD
+    private int value;//zmiana value zmiana geubosci1do1
+    private Byte color;//kazdy przycik to cyferka - patrz getColor()
     private boolean kuleczkaWladzy;
     private int liczbGraczy = 2;
+    private int seed;
 
 
     private Gra gra;
@@ -52,24 +51,16 @@ public class GraGUI extends Thread{
     private Server serwer;
 
     public GraGUI() {
-        canvas = new BufferedImage(1920, 1080, BufferedImage.TYPE_INT_RGB);
+        canvas = new BufferedImage(960, 1080, BufferedImage.TYPE_INT_RGB);
         gra = new Gra(liczbGraczy);
         klient = new Player();
         MenuGUI menuGUI = new MenuGUI(GraGUI.this);
         menuGUI.setVisible(true);
+
         //oknoGry.setPreferredSize(new Dimension(400, 600));
-        color = 1;
         value = 7;
-
-
-
-
-
-        //mozna uladnic potencjalnie to ale sa wazniejsze rzeczy
-        //int tmpCol = color;
         color = 3;//bialy
         colorScreen();
-        //color = tmpCol;
         planszaRysunku.addMouseMotionListener(new MouseMotionAdapter() {
             @Override
 
@@ -78,16 +69,11 @@ public class GraGUI extends Thread{
                     currentX = (short)e.getX();
                     currentY = (short)e.getY();
                     klient.setCurrentX(currentX);
-                    klient.setCurrentY(currentY);
                     klient.wyslijCurrentX();
+                    klient.setCurrentY(currentY);
                     klient.wyslijCurrentY();
                     updateCanvas();
-                   // oldX = currentX;
-                   // oldY = currentY;
-                   // klient.setOldX(oldX);
-                   // klient.setOldY(oldY);
-                   // klient.wyslijOldX();
-                    //klient.wyslijOldY();
+
                 }
             }
         });
@@ -99,16 +85,10 @@ public class GraGUI extends Thread{
                 if (kuleczkaWladzy) {
                     currentX = (short)e.getX();
                     currentY = (short)e.getY();;
-                    //currentX = oldX;
-                    //currentY = oldY;
                     klient.setCurrentX(currentX);
-                    klient.setCurrentY(currentY);
-                    //klient.setOldX(oldX);
-                    //klient.setOldY(oldY);
                     klient.wyslijCurrentX();
+                    klient.setCurrentY(currentY);
                     klient.wyslijCurrentY();
-                    //klient.wyslijOldX();
-                    //klient.wyslijOldY();
                     updateCanvas();
                 }
             }
@@ -165,7 +145,7 @@ public class GraGUI extends Thread{
                 }
             }
         });
-        wyczyscButton.addActionListener(new ActionListener() {
+        gumkaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent actionEvent) {
                 if(kuleczkaWladzy) {
@@ -214,7 +194,6 @@ public class GraGUI extends Thread{
 
     }
 
-    String[] hasła = {"kot", "pies", "basen", "buty", "kwiatek"};
 
     public void czyZgadles(int x, GraGUI graGUI){
         //if(x == )
@@ -244,7 +223,7 @@ public class GraGUI extends Thread{
         Arrays.sort(ranking, Collections.reverseOrder()); //od najw. do najm. wartosci {100, 40, 20, 8, ... itd.}
         punkty1.setValue(ranking[0]);
         punkty2.setValue(ranking[1]);
-        punkty3.setValue(ranking[2]);
+       // punkty3.setValue(ranking[2]);
 
 
         int k = 1;
@@ -259,18 +238,10 @@ public class GraGUI extends Thread{
                  }if(k==1){
                      imie2.setText(listaGraczy[i].getNazwaGracza());
                      k++;
-
-                 }/*if(k==3){
+                 }/*if(k==1){
                      imie3.setText(listaGraczy[i].getNazwaGracza());
                      k++;
-                 }if(k==2){
-                     imie4.setText(listaGraczy[i].getNazwaGracza());
-                     k++;
-                 }if(k==1){
-                     imie5.setText(listaGraczy[i].getNazwaGracza());
-                     k++;
-                 }
-                */
+                 }*/
                 x = Arrays.copyOf(x, x.length - 1); //usuwa ostatni element z "x"
                 removeElement(listaGraczy, i);
             }
@@ -285,7 +256,7 @@ public class GraGUI extends Thread{
 
             planszaRysunku = new JPanel(){
                 protected void paintComponent(Graphics g) {
-                    super.paintComponent(g);//??????
+                    super.paintComponent(g);
                     Graphics2D g2 = (Graphics2D) g;
                     g2.drawImage(canvas, 0, 0, null);
                 }
@@ -296,9 +267,6 @@ public class GraGUI extends Thread{
         Graphics2D g2d = canvas.createGraphics();
         g2d.setPaint(getColor());
         g2d.fillOval(currentX - (value / 2), currentY - (value / 2), value, value);
-        //g2d.setStroke(new BasicStroke((float) value, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-        //g2d.drawLine(oldX, oldY, currentX, currentY);
-        //g2d.setStroke(new BasicStroke(1.0f));
         planszaRysunku.repaint();
     }
     private Color getColor() {
@@ -339,7 +307,6 @@ public class GraGUI extends Thread{
 
     }
     public void dolaczDoGry(){
-
         klient.polaczZSerwerem();
     }
 
@@ -355,16 +322,27 @@ public class GraGUI extends Thread{
     }
     public void run(){
         dolaczDoGry();
+        gra.setSeed(klient.getSeed());
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
+        }if(klient.getNrGraczaUWladzy()==klient.getPlayerID())
+            haslo.setText(gra.getHaslo());
+
+
+            if (klient.getOtrzymanyNR() == 0)
+                imie1.setText(gra.getGracze()[0].getNazwaGracza());
+            if(klient.getOtrzymanyNR() == 1)
+                imie2.setText(gra.getGracze()[1].getNazwaGracza());
+
         while (true){
 
-            imie1.setText(gra.getGracze()[0].getNazwaGracza());
-            imie2.setText(gra.getGracze()[1].getNazwaGracza());
+            //refresh();
+
             synchronizeValues();
+
+
         }
     }
 
@@ -372,37 +350,32 @@ public class GraGUI extends Thread{
         return klient;
     }
 
-/////
-
 
         private void synchronizeValues(){
+            if(gra.getGracze()[0].getNazwaGracza().equals("")){
+                try {
+                    gra.getGracze()[0].setNazwaGracza(klient.getImiona()[0]);
+                }catch (IllegalArgumentException e){}
+                imie1.setText(gra.getGracze()[0].getNazwaGracza());
+            }
+            if(gra.getGracze()[1].getNazwaGracza().equals("")){
+                try {
+                    gra.getGracze()[1].setNazwaGracza(klient.getImiona()[1]);
+                }catch (IllegalArgumentException e){}
+                imie2.setText(gra.getGracze()[1].getNazwaGracza());
+            }
 
             if(klient.getNrGraczaUWladzy()==klient.getPlayerID()){
                 kuleczkaWladzy = true;
             }
             else{
 
-
-                short otrzymanyNR = klient.getOtrzymanyNR();
-                //if(klient.getPlayerID() != otrzymanyNR){
-              //      gra.getGracze()[otrzymanyNR].setNazwaGracza(klient.getSlowo());
-                //}
-
                 kuleczkaWladzy = false;
                 color = klient.getKolor();
-               // oldX = klient.getOldX();
-                //oldY = klient.getOldY();
                 currentX = klient.getCurrentX();
                 currentY = klient.getCurrentY();
                 updateCanvas();
 
-
-
-
-
-
-                //System.out.println(oldX);
-               // System.out.println(currentX);
             }
             if(!klient.getSlowo().equals("")){
                 chatPole.append(gra.getGracze()[klient.getOtrzymanyNR()].getNazwaGracza() + ": " + klient.getSlowo() + "\n");
