@@ -1,6 +1,5 @@
 public class Gracz {
 
-    private boolean czyMojaTura; //1- tak, 0-nie
     //private int pozycjaRanking; //ktore miejsce punktowo zajmuje wsrod graczy
     private int liczbaPunktow;
     private int numerGracza;
@@ -8,9 +7,7 @@ public class Gracz {
 
     private String nazwaGracza;
 
-    public Gracz(boolean czyMojaTura){
-        this.czyMojaTura = czyMojaTura;
-      //  this.pozycjaRanking = pozycjaRanking;
+    public Gracz(){
         this.nazwaGracza = "";
     }
 
@@ -18,23 +15,9 @@ public class Gracz {
         liczbaPunktow =+ liczbaDodanychPunktow;
     }
 
-    public void setCzyMojaTura(boolean czyMojaTura) {
-        this.czyMojaTura = czyMojaTura;
-    }
-
-    public boolean isCzyMojaTura() { return czyMojaTura; }
-
-  //  public int getPozycjaRanking() { return pozycjaRanking; }
-
     public int getLiczbaPunktow(){ return liczbaPunktow; }
 
-    public int getNumerGracza() { return numerGracza; }
-
     public String getNazwaGracza() { return nazwaGracza; }
-
-    public int getCoRysuje(){ return coRysuje;}
-
-
 
     public void setNazwaGracza(String nazwaGracza) {
         if(nazwaGracza.equals(""))

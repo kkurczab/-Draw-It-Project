@@ -26,7 +26,7 @@ public class Gra{
         this.gracze = new Gracz[liczbaGraczy];
 
         for(int i = 0; i<liczbaGraczy;i++){
-            gracze[i] = new Gracz(false);
+            gracze[i] = new Gracz();
         }
         odczytHasel();
         random = new Random();

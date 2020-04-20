@@ -160,7 +160,6 @@ public class GraGUI extends Thread{
                 String wiadomosc = chatWpisz.getText();
                 if(!wiadomosc.isBlank()) {
                     klient.setSlowo(chatWpisz.getText());
-
                     klient.wyslijSlowo();
                     chatWpisz.setText("");
                     klient.setSlowo("");
