@@ -69,9 +69,6 @@ public class MenuGUI extends JDialog{
                     graGUI.getKlient().setImie(imie1.getText(),graGUI.getKlient().getPlayerID());
                     graGUI.getKlient().wyslijImie();
                     dispose();
-                    WaitingGUI waitingGUI = new WaitingGUI(graGUI);
-                    waitingGUI.setVisible(true);
-
 
                 }catch (IllegalArgumentException | InterruptedException ee){
                     JOptionPane.showMessageDialog(null, "Podaj imię!");
